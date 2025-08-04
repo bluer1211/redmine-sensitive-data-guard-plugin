@@ -4,9 +4,12 @@ Redmine::Plugin.register :redmine_sensitive_data_guard do
   name 'Redmine Sensitive Data Guard Plugin'
   author 'Jason Liu (bluer1211)'
   description 'Sensitive data detection and audit logging plugin for Redmine'
-  version '1.0.0'
+  version '1.0.1'
   url 'https://github.com/bluer1211/redmine-sensitive-data-guard-plugin'
   author_url 'https://github.com/bluer1211'
+  
+  # 版本相容性
+  requires_redmine version_or_higher: '3.4.0'
   
   # 設定設定頁面
   settings default: {

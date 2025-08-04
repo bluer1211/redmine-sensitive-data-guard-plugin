@@ -4,6 +4,26 @@
 
 Redmine 敏感資料防護插件是一個強大的資訊安全工具，用於防止使用者在 Redmine 系統中儲存、傳輸或散布機敏資訊。本插件提供自動偵測、即時阻擋、操作稽核和通知管理等功能。
 
+## 🎯 系統需求
+
+### 支援的 Redmine 版本
+- **Redmine 4.1.1** ✅ (主要支援版本)
+- **Redmine 4.1.x** ✅ (相容)
+- **Redmine 4.0.x** ✅ (相容)
+- **Redmine 3.4.x** ⚠️ (部分功能可能受限)
+
+### 系統環境需求
+- **Ruby 版本**：2.5 或更高版本
+- **Rails 版本**：5.2 或更高版本
+- **資料庫**：MySQL 5.7+, PostgreSQL 9.6+, SQLite 3.8+
+- **瀏覽器**：Chrome 60+, Firefox 55+, Safari 12+, Edge 79+
+
+### 建議配置
+- **記憶體**：最少 2GB RAM
+- **儲存空間**：至少 1GB 可用空間
+- **CPU**：雙核心或更高
+- **網路**：穩定的網路連線（用於通知功能）
+
 ## 🎯 主要功能
 
 ### ✅ 敏感資料偵測
@@ -67,6 +87,21 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 4. 點擊「配置」進行設定
 5. 啟用插件功能
 
+### 版本相容性檢查
+
+在安裝前，請確認您的 Redmine 版本：
+
+```bash
+# 檢查 Redmine 版本
+bundle exec rake redmine:info RAILS_ENV=production
+
+# 檢查 Ruby 版本
+ruby --version
+
+# 檢查 Rails 版本
+bundle exec rails --version
+```
+
 ## ⚙️ 配置說明
 
 ### 基本設定
@@ -110,6 +145,31 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 - **正規表示式**：敏感資料偵測引擎
 - **ActiveRecord**：資料庫操作
 - **Redmine Hooks**：系統整合
+
+### 版本相容性說明
+
+#### Redmine 4.1.1 (主要支援版本)
+- ✅ 完整功能支援
+- ✅ 所有新功能特性
+- ✅ 最佳效能表現
+- ✅ 完整測試覆蓋
+
+#### Redmine 4.1.x (相容版本)
+- ✅ 核心功能支援
+- ✅ 基本偵測功能
+- ✅ 穩定運行
+
+#### Redmine 4.0.x (相容版本)
+- ✅ 核心功能支援
+- ✅ 基本偵測功能
+- ⚠️ 部分進階功能可能受限
+- ✅ 穩定運行
+
+#### Redmine 3.4.x (有限支援)
+- ⚠️ 基本偵測功能
+- ❌ 部分新功能不支援
+- ⚠️ 可能需要手動調整
+- ⚠️ 建議升級到 4.x 版本
 
 ### 檔案結構
 ```
@@ -175,6 +235,21 @@ redmine_sensitive_data_guard/
 - **版本**：1.0.1
 - **最後更新**：2025-08-04
 - **GitHub**：https://github.com/bluer1211
+
+## 📋 版本歷史
+
+### v1.0.1 (2025-08-04)
+- ✅ 新增 Redmine 4.1.1 版本支援
+- ✅ 更新系統需求文件
+- ✅ 改善安裝指南
+- ✅ 新增版本檢查工具
+
+### v1.0.0 (2025-08-01)
+- 🎉 初始版本發布
+- ✅ 基礎敏感資料偵測功能
+- ✅ 基本阻擋機制
+- ✅ 操作日誌記錄
+- ✅ 管理設定介面
 
 ---
 
