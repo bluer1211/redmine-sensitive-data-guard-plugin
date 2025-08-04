@@ -115,11 +115,20 @@ mv redmine-sensitive-data-guard-plugin-main redmine_sensitive_data_guard
 
 ### 🔧 安裝步驟
 
-#### 1. 執行資料庫遷移
+#### 1. 安裝 Gem 依賴
 ```bash
 # 進入 Redmine 目錄
 cd /path/to/redmine
 
+# 安裝插件所需的 Gem 依賴
+bundle install
+
+# 檢查 Gem 是否安裝成功
+bundle list | grep -E "(rubyzip|nokogiri|roo|pdf-reader|sidekiq|redis|slack-notifier|axlsx)"
+```
+
+#### 2. 執行資料庫遷移
+```bash
 # 執行遷移（建立資料表）
 bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 
@@ -127,7 +136,7 @@ bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 bundle exec rake db:seed:redmine_plugins RAILS_ENV=production
 ```
 
-#### 2. 檢查資料庫狀態
+#### 3. 檢查資料庫狀態
 ```bash
 # 檢查遷移狀態
 bundle exec rake redmine:plugins:migrate:status RAILS_ENV=production
@@ -141,7 +150,7 @@ bundle exec rails console RAILS_ENV=production
 # exit
 ```
 
-#### 3. 重啟 Redmine 服務
+#### 4. 重啟 Redmine 服務
 ```bash
 # 重啟 Redmine 服務
 sudo systemctl restart redmine
@@ -150,12 +159,27 @@ sudo systemctl restart redmine
 sudo service redmine restart
 ```
 
-#### 4. 啟用插件
+#### 5. 啟用插件
 1. 以管理員身份登入 Redmine
 2. 進入「管理」→「設定」→「插件」
 3. 找到「Redmine Sensitive Data Guard Plugin」
 4. 點擊「配置」進行設定
 5. 啟用插件功能
+
+#### 6. 設定用戶權限
+1. 進入「管理」→「角色與權限」
+2. 選擇要設定的角色（如：管理員、專案管理員等）
+3. 在「敏感資料防護」模組中勾選以下權限：
+   - **查看敏感日誌**：允許查看敏感操作日誌
+   - **管理敏感規則**：允許管理偵測規則
+   - **覆蓋敏感偵測**：允許覆蓋敏感資料偵測
+4. 點擊「儲存」
+
+#### 7. 設定專案權限（可選）
+1. 進入特定專案
+2. 點擊「設定」→「成員」
+3. 為專案成員分配適當的敏感資料防護權限
+4. 或進入「設定」→「模組」啟用「敏感資料防護」模組
 
 ### 📊 資料庫結構
 
@@ -241,6 +265,28 @@ bundle exec rake redmine_sensitive_data_guard:db:backup RAILS_ENV=production
 bundle exec rake redmine_sensitive_data_guard:db:reset RAILS_ENV=production
 ```
 
+### 🔍 安裝檢查工具
+
+#### 檢查安裝環境
+```bash
+# 全面檢查安裝環境和依賴
+bundle exec rake redmine_sensitive_data_guard:install:check RAILS_ENV=production
+```
+
+#### 執行完整安裝流程
+```bash
+# 一鍵執行完整安裝流程（推薦新手使用）
+bundle exec rake redmine_sensitive_data_guard:install:setup RAILS_ENV=production
+```
+
+#### 檢查項目包括
+- ✅ **Redmine 版本相容性**
+- ✅ **Ruby/Rails 版本要求**
+- ✅ **Gem 依賴安裝狀態**
+- ✅ **資料庫連接和資料表**
+- ✅ **檔案權限和完整性**
+- ✅ **插件設定狀態**
+
 ### 📋 資料庫維護建議
 
 #### 定期維護
@@ -277,6 +323,42 @@ bundle exec rails --version
 1. **檢查插件列表**：管理 → 設定 → 插件
 2. **檢查選單項目**：管理選單中應出現「敏感資料防護」
 3. **檢查權限**：用戶 → 權限中應有相關權限選項
+
+### 🗑️ 卸載插件
+
+#### 1. 備份資料（重要）
+```bash
+# 備份插件資料
+bundle exec rake redmine_sensitive_data_guard:db:backup RAILS_ENV=production
+```
+
+#### 2. 停用插件
+1. 進入「管理」→「設定」→「插件」
+2. 找到「Redmine Sensitive Data Guard Plugin」
+3. 點擊「停用」
+
+#### 3. 移除資料庫資料（可選）
+```bash
+# 移除插件資料表（危險操作）
+bundle exec rake redmine:plugins:migrate:down RAILS_ENV=production
+
+# 或保留資料表僅移除插件檔案
+```
+
+#### 4. 移除插件檔案
+```bash
+# 移除插件目錄
+rm -rf /path/to/redmine/plugins/redmine_sensitive_data_guard
+
+# 重啟 Redmine 服務
+sudo systemctl restart redmine
+```
+
+#### 5. 清理 Gem 依賴（可選）
+```bash
+# 如果沒有其他插件使用這些 Gem，可以移除
+bundle update
+```
 
 ## ⚙️ 配置說明
 
