@@ -120,11 +120,28 @@ mv redmine-sensitive-data-guard-plugin-main redmine_sensitive_data_guard
 # 進入 Redmine 目錄
 cd /path/to/redmine
 
-# 執行遷移
+# 執行遷移（建立資料表）
 bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+
+# 初始化預設資料（可選）
+bundle exec rake db:seed:redmine_plugins RAILS_ENV=production
 ```
 
-#### 2. 重啟 Redmine 服務
+#### 2. 檢查資料庫狀態
+```bash
+# 檢查遷移狀態
+bundle exec rake redmine:plugins:migrate:status RAILS_ENV=production
+
+# 檢查資料表是否建立成功
+bundle exec rails console RAILS_ENV=production
+# 在 Rails console 中執行：
+# SensitiveOperationLog.count
+# DetectionRule.count
+# WhitelistRule.count
+# exit
+```
+
+#### 3. 重啟 Redmine 服務
 ```bash
 # 重啟 Redmine 服務
 sudo systemctl restart redmine
@@ -133,12 +150,110 @@ sudo systemctl restart redmine
 sudo service redmine restart
 ```
 
-#### 3. 啟用插件
+#### 4. 啟用插件
 1. 以管理員身份登入 Redmine
 2. 進入「管理」→「設定」→「插件」
 3. 找到「Redmine Sensitive Data Guard Plugin」
 4. 點擊「配置」進行設定
 5. 啟用插件功能
+
+### 📊 資料庫結構
+
+插件會建立以下資料表：
+
+#### 核心資料表
+- **`sensitive_operation_logs`** - 敏感操作日誌
+- **`detection_rules`** - 偵測規則
+- **`whitelist_rules`** - 白名單規則
+
+#### 預設資料
+- ✅ **8 個預設偵測規則**（身分證號、信用卡號、API Key 等）
+- ✅ **3 個預設白名單規則**（測試環境、範例資料、管理員）
+- ✅ **完整的索引優化**（提升查詢效能）
+
+### 🔍 資料庫相容性
+
+#### 支援的資料庫
+- ✅ **MySQL 5.7+** (推薦)
+- ✅ **PostgreSQL 9.6+** (推薦)
+- ✅ **SQLite 3.8+** (開發環境)
+
+#### 資料庫要求
+- **儲存空間**：至少 100MB 可用空間
+- **權限**：需要 CREATE TABLE 和 CREATE INDEX 權限
+- **字符集**：建議使用 UTF-8 編碼
+
+### 🛠️ 故障排除
+
+#### 遷移失敗
+```bash
+# 檢查錯誤日誌
+tail -f /var/log/redmine/production.log
+
+# 重新執行遷移
+bundle exec rake redmine:plugins:migrate:redo RAILS_ENV=production
+
+# 如果仍有問題，可以重置插件資料庫
+bundle exec rake redmine:plugins:migrate:down RAILS_ENV=production
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+```
+
+#### 資料庫連接問題
+```bash
+# 檢查資料庫連接
+bundle exec rake db:version RAILS_ENV=production
+
+# 檢查資料庫配置
+cat config/database.yml
+```
+
+### 🛠️ 資料庫管理工具
+
+插件提供了多個 Rake 任務來管理資料庫：
+
+#### 檢查資料庫狀態
+```bash
+# 檢查資料表狀態和記錄數量
+bundle exec rake redmine_sensitive_data_guard:db:status RAILS_ENV=production
+```
+
+#### 初始化預設資料
+```bash
+# 載入預設偵測規則和白名單
+bundle exec rake redmine_sensitive_data_guard:db:seed RAILS_ENV=production
+```
+
+#### 清理過期日誌
+```bash
+# 根據保留策略清理過期日誌
+bundle exec rake redmine_sensitive_data_guard:db:cleanup RAILS_ENV=production
+```
+
+#### 備份插件資料
+```bash
+# 備份所有插件資料表
+bundle exec rake redmine_sensitive_data_guard:db:backup RAILS_ENV=production
+```
+
+#### 重置插件資料庫（危險操作）
+```bash
+# 完全重置插件資料庫（需要確認）
+bundle exec rake redmine_sensitive_data_guard:db:reset RAILS_ENV=production
+```
+
+### 📋 資料庫維護建議
+
+#### 定期維護
+- **每日**：檢查日誌數量
+- **每週**：清理過期日誌
+- **每月**：備份插件資料
+- **每季**：檢查資料庫效能
+
+#### 效能優化
+- 定期清理過期日誌
+- 監控資料表大小
+- 檢查索引使用情況
+- 適時調整保留策略
 
 ### 版本相容性檢查
 
