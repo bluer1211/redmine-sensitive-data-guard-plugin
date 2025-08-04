@@ -1,8 +1,37 @@
-# 🔌 Redmine 敏感資料防護插件
+# �� Redmine 敏感資料防護插件
+
+[![Redmine Version](https://img.shields.io/badge/Redmine-4.1.1-brightgreen.svg)](https://www.redmine.org/)
+[![Ruby Version](https://img.shields.io/badge/Ruby-2.5+-red.svg)](https://www.ruby-lang.org/)
+[![Rails Version](https://img.shields.io/badge/Rails-5.2+-blue.svg)](https://rubyonrails.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.1-orange.svg)](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/releases)
+
+> 🛡️ **強大的 Redmine 敏感資料防護工具**  
+> 自動偵測、即時阻擋、操作稽核，保護您的敏感資訊安全
+
+## 📋 快速導覽
+
+- [🎯 系統需求](#-系統需求)
+- [🚀 快速開始](#-快速開始)
+- [⚙️ 配置說明](#️-配置說明)
+- [📊 使用統計](#-使用統計)
+- [🔧 開發資訊](#-開發資訊)
+- [📚 相關文檔](#-相關文檔)
+- [🛡️ 安全特性](#️-安全特性)
+- [🤝 支援與貢獻](#-支援與貢獻)
 
 ## 📋 概述
 
 Redmine 敏感資料防護插件是一個強大的資訊安全工具，用於防止使用者在 Redmine 系統中儲存、傳輸或散布機敏資訊。本插件提供自動偵測、即時阻擋、操作稽核和通知管理等功能。
+
+### 🌟 核心特色
+
+- 🔍 **智能偵測**：支援 10+ 種敏感資料類型偵測
+- 🚫 **即時阻擋**：高風險內容自動阻擋提交
+- 📄 **文件掃描**：支援 Office 文件內容掃描
+- 📊 **完整稽核**：詳細的操作日誌記錄
+- 🔔 **即時通知**：Email 和 Slack 通知整合
+- ⚙️ **靈活配置**：可自訂偵測規則和處理策略
 
 ## 🎯 系統需求
 
@@ -59,18 +88,34 @@ Redmine 敏感資料防護插件是一個強大的資訊安全工具，用於防
 
 ## 🚀 快速開始
 
-### 1. 安裝插件
+### 📦 安裝方式
 
+#### 方式一：Git Clone（推薦）
 ```bash
-# 將插件複製到 Redmine 插件目錄
-cp -r redmine_sensitive_data_guard /path/to/redmine/plugins/
+# 進入 Redmine 插件目錄
+cd /path/to/redmine/plugins/
 
-# 重啟 Redmine 服務
-sudo systemctl restart redmine
+# 克隆插件
+git clone https://github.com/bluer1211/redmine-sensitive-data-guard-plugin.git redmine_sensitive_data_guard
+
+# 進入插件目錄
+cd redmine_sensitive_data_guard
+
+# 安裝依賴
+bundle install
 ```
 
-### 2. 執行資料庫遷移
+#### 方式二：手動下載
+```bash
+# 下載並解壓到插件目錄
+wget https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/archive/main.zip
+unzip main.zip -d /path/to/redmine/plugins/
+mv redmine-sensitive-data-guard-plugin-main redmine_sensitive_data_guard
+```
 
+### 🔧 安裝步驟
+
+#### 1. 執行資料庫遷移
 ```bash
 # 進入 Redmine 目錄
 cd /path/to/redmine
@@ -79,8 +124,16 @@ cd /path/to/redmine
 bundle exec rake redmine:plugins:migrate RAILS_ENV=production
 ```
 
-### 3. 啟用插件
+#### 2. 重啟 Redmine 服務
+```bash
+# 重啟 Redmine 服務
+sudo systemctl restart redmine
 
+# 或使用其他方式重啟
+sudo service redmine restart
+```
+
+#### 3. 啟用插件
 1. 以管理員身份登入 Redmine
 2. 進入「管理」→「設定」→「插件」
 3. 找到「Redmine Sensitive Data Guard Plugin」
@@ -101,6 +154,14 @@ ruby --version
 # 檢查 Rails 版本
 bundle exec rails --version
 ```
+
+### ✅ 安裝驗證
+
+安裝完成後，您可以透過以下方式驗證：
+
+1. **檢查插件列表**：管理 → 設定 → 插件
+2. **檢查選單項目**：管理選單中應出現「敏感資料防護」
+3. **檢查權限**：用戶 → 權限中應有相關權限選項
 
 ## ⚙️ 配置說明
 
@@ -213,17 +274,59 @@ redmine_sensitive_data_guard/
 
 ## 🤝 支援與貢獻
 
-### 問題回報
-如有問題或建議，請提交 Issue：
-- GitHub Issues：[連結]
-- 技術支援：[聯絡方式]
+### 📞 問題回報
 
-### 貢獻開發
-歡迎提交 Pull Request：
-1. Fork 專案
-2. 建立功能分支
-3. 提交變更
-4. 發起 Pull Request
+如有問題或建議，請提交 Issue：
+
+- 🐛 **Bug 回報**：[GitHub Issues](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/issues)
+- 💡 **功能建議**：[Feature Requests](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/issues/new?template=feature_request.md)
+- 📖 **文檔問題**：[Documentation Issues](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/issues/new?template=documentation.md)
+
+### 🔧 技術支援
+
+- 📧 **Email 支援**：bluer1211@gmail.com
+- 💬 **討論區**：[GitHub Discussions](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/discussions)
+- 📚 **文檔**：[Wiki](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/wiki)
+
+### 🌟 貢獻開發
+
+歡迎提交 Pull Request 來改善插件！
+
+#### 貢獻流程
+
+1. **Fork 專案**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/redmine-sensitive-data-guard-plugin.git
+   cd redmine-sensitive-data-guard-plugin
+   ```
+
+2. **建立功能分支**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **提交變更**
+   ```bash
+   git add .
+   git commit -m "feat: 新增功能描述"
+   ```
+
+4. **發起 Pull Request**
+   - 前往 [GitHub Pull Requests](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/pulls)
+   - 點擊 "New Pull Request"
+   - 選擇您的分支並提交
+
+#### 開發指南
+
+- 📋 **開發規範**：請參考 [CONTRIBUTING.md](CONTRIBUTING.md)
+- 🧪 **測試指南**：請參考 [TESTING.md](docs/TESTING.md)
+- 📝 **程式碼風格**：遵循 Ruby 和 Rails 最佳實踐
+
+### 🏆 貢獻者
+
+感謝所有為此專案做出貢獻的開發者！
+
+[![Contributors](https://contributors-img.web.app/image?repo=bluer1211/redmine-sensitive-data-guard-plugin)](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/graphs/contributors)
 
 ## 📄 授權條款
 
@@ -250,6 +353,23 @@ redmine_sensitive_data_guard/
 - ✅ 基本阻擋機制
 - ✅ 操作日誌記錄
 - ✅ 管理設定介面
+
+---
+
+## 🔗 相關連結
+
+- 🌐 **官方網站**：[Redmine](https://www.redmine.org/)
+- 📚 **完整文檔**：[GitHub Wiki](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/wiki)
+- 🐛 **問題回報**：[GitHub Issues](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/issues)
+- 💬 **討論區**：[GitHub Discussions](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/discussions)
+- 📦 **下載頁面**：[GitHub Releases](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/releases)
+
+## ⭐ 給我們一個星標
+
+如果這個插件對您有幫助，請給我們一個星標！
+
+[![GitHub stars](https://img.shields.io/github/stars/bluer1211/redmine-sensitive-data-guard-plugin.svg?style=social&label=Star)](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin)
+[![GitHub forks](https://img.shields.io/github/forks/bluer1211/redmine-sensitive-data-guard-plugin.svg?style=social&label=Fork)](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/fork)
 
 ---
 
