@@ -1,0 +1,116 @@
+<div class="box tabular">
+  <h3><%= l(:label_plugin_settings) %></h3>
+  
+  <p>
+    <%= label_tag 'settings[enabled]', l(:label_enable_plugin) %>
+    <%= check_box_tag 'settings[enabled]', 1, @settings['enabled'] %>
+    <em class="info"><%= l(:help_enable_plugin) %></em>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[enable_file_scanning]', l(:label_enable_file_scanning) %>
+    <%= check_box_tag 'settings[enable_file_scanning]', 1, @settings['enable_file_scanning'] %>
+    <em class="info"><%= l(:help_enable_file_scanning) %></em>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[max_file_size_mb]', l(:label_max_file_size_mb) %>
+    <%= number_field_tag 'settings[max_file_size_mb]', @settings['max_file_size_mb'], min: 1, max: 100 %>
+    <em class="info"><%= l(:help_max_file_size_mb) %></em>
+  </p>
+  
+  <h3>通知設定</h3>
+  
+  <p>
+    <%= label_tag 'settings[email_notifications]', l(:label_enable_email_notifications) %>
+    <%= check_box_tag 'settings[email_notifications]', 1, @settings['email_notifications'] %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[slack_webhook_url]', l(:label_enable_slack_notifications) %>
+    <%= text_field_tag 'settings[slack_webhook_url]', @settings['slack_webhook_url'], size: 60 %>
+  </p>
+  
+  <h3>日誌保留設定</h3>
+  
+  <p>
+    <%= label_tag 'settings[retention_days_high_risk]', l(:label_retention_days_high_risk) %>
+    <%= number_field_tag 'settings[retention_days_high_risk]', @settings['retention_days_high_risk'], min: 365, max: 3650 %>
+    <em class="info"><%= l(:help_retention_days) %></em>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[retention_days_standard]', l(:label_retention_days_standard) %>
+    <%= number_field_tag 'settings[retention_days_standard]', @settings['retention_days_standard'], min: 30, max: 3650 %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[retention_days_override]', l(:label_retention_days_override) %>
+    <%= number_field_tag 'settings[retention_days_override]', @settings['retention_days_override'], min: 365, max: 3650 %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[auto_cleanup_enabled]', l(:label_auto_cleanup_enabled) %>
+    <%= check_box_tag 'settings[auto_cleanup_enabled]', 1, @settings['auto_cleanup_enabled'] %>
+    <em class="info"><%= l(:help_auto_cleanup) %></em>
+  </p>
+  
+  <h3>風險等級設定</h3>
+  
+  <p>
+    <%= label_tag 'settings[enable_high_risk_detection]', '啟用高風險偵測' %>
+    <%= check_box_tag 'settings[enable_high_risk_detection]', 1, @settings['enable_high_risk_detection'] != false %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[enable_medium_risk_detection]', '啟用中風險偵測' %>
+    <%= check_box_tag 'settings[enable_medium_risk_detection]', 1, @settings['enable_medium_risk_detection'] != false %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[enable_low_risk_detection]', '啟用低風險偵測' %>
+    <%= check_box_tag 'settings[enable_low_risk_detection]', 1, @settings['enable_low_risk_detection'] != false %>
+  </p>
+  
+  <h3>處理策略設定</h3>
+  
+  <p>
+    <%= label_tag 'settings[high_risk_strategy]', '高風險處理策略' %>
+    <%= select_tag 'settings[high_risk_strategy]', 
+        options_for_select([
+          ['阻擋', 'block'],
+          ['警告', 'warn'],
+          ['記錄', 'log']
+        ], @settings['high_risk_strategy'] || 'block') %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[medium_risk_strategy]', '中風險處理策略' %>
+    <%= select_tag 'settings[medium_risk_strategy]', 
+        options_for_select([
+          ['阻擋', 'block'],
+          ['警告', 'warn'],
+          ['記錄', 'log']
+        ], @settings['medium_risk_strategy'] || 'warn') %>
+  </p>
+  
+  <p>
+    <%= label_tag 'settings[low_risk_strategy]', '低風險處理策略' %>
+    <%= select_tag 'settings[low_risk_strategy]', 
+        options_for_select([
+          ['阻擋', 'block'],
+          ['警告', 'warn'],
+          ['記錄', 'log']
+        ], @settings['low_risk_strategy'] || 'log') %>
+  </p>
+</div>
+
+<div class="box">
+  <h3>快速操作</h3>
+  
+  <p>
+    <%= link_to '查看敏感操作日誌', sensitive_logs_path, class: 'button' %>
+    <%= link_to '清理過期日誌', cleanup_sensitive_logs_path, method: :post, 
+        data: { confirm: '確定要清理過期日誌嗎？' }, class: 'button' %>
+  </p>
+</div> 

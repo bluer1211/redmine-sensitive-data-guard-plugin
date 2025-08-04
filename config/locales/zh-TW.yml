@@ -1,0 +1,90 @@
+zh-TW:
+  label_sensitive_data_guard: "敏感資料防護"
+  label_sensitive_logs: "敏感操作日誌"
+  label_detection_rules: "偵測規則"
+  label_sensitive_operations: "敏感操作"
+  
+  # 錯誤訊息
+  error_id_card_detected: "偵測到身分證號碼，請移除或使用替代識別碼"
+  error_credit_card_detected: "偵測到信用卡號碼，請移除或使用遮蔽格式"
+  error_api_key_detected: "偵測到API金鑰，請移除或使用環境變數"
+  error_credential_detected: "偵測到帳號密碼資訊，請移除或使用安全配置"
+  error_phone_detected: "偵測到手機號碼，請移除或使用替代聯絡方式"
+  error_email_detected: "偵測到Email地址，請確認其必要性"
+  error_ip_address_detected: "偵測到IP位址，請確認其必要性"
+  error_password_detected: "偵測到密碼資訊，請移除或使用安全配置"
+  error_sensitive_data_detected: "偵測到敏感資訊，請檢查內容"
+  
+  # 操作類型
+  operation_type_blocked_submission: "阻擋提交"
+  operation_type_warning: "警告"
+  operation_type_override: "覆蓋提交"
+  
+  # 內容類型
+  content_type_issue: "問題"
+  content_type_wiki: "Wiki頁面"
+  content_type_project: "專案"
+  content_type_attachment: "附件"
+  
+  # 風險等級
+  risk_level_high: "高風險"
+  risk_level_medium: "中風險"
+  risk_level_low: "低風險"
+  
+  # 表單標籤
+  field_user: "使用者"
+  field_project: "專案"
+  field_operation_type: "操作類型"
+  field_content_type: "內容類型"
+  field_risk_level: "風險等級"
+  field_ip_address: "IP位址"
+  field_created_at: "建立時間"
+  field_content_preview: "內容預覽"
+  field_detected_patterns: "偵測到的模式"
+  
+  # 按鈕
+  button_cleanup: "清理過期日誌"
+  button_export_csv: "匯出CSV"
+  button_show_details: "查看詳情"
+  button_delete: "刪除"
+  
+  # 訊息
+  notice_cleanup_completed: "過期日誌清理完成"
+  notice_log_deleted: "日誌已刪除"
+  error_failed_to_delete: "刪除失敗"
+  
+  # 統計
+  label_total_count: "總計"
+  label_high_risk_count: "高風險"
+  label_medium_risk_count: "中風險"
+  label_low_risk_count: "低風險"
+  label_blocked_count: "阻擋"
+  label_warning_count: "警告"
+  label_override_count: "覆蓋"
+  
+  # 篩選
+  label_filter: "篩選"
+  label_filter_by_user: "按使用者篩選"
+  label_filter_by_project: "按專案篩選"
+  label_filter_by_risk_level: "按風險等級篩選"
+  label_filter_by_operation_type: "按操作類型篩選"
+  label_filter_by_date_range: "按日期範圍篩選"
+  
+  # 設定
+  label_plugin_settings: "插件設定"
+  label_enable_plugin: "啟用插件"
+  label_enable_file_scanning: "啟用檔案掃描"
+  label_max_file_size_mb: "最大檔案大小 (MB)"
+  label_enable_email_notifications: "啟用Email通知"
+  label_enable_slack_notifications: "啟用Slack通知"
+  label_retention_days_high_risk: "高風險記錄保留天數"
+  label_retention_days_standard: "一般記錄保留天數"
+  label_retention_days_override: "覆蓋記錄保留天數"
+  label_auto_cleanup_enabled: "啟用自動清理"
+  
+  # 說明
+  help_enable_plugin: "啟用敏感資料防護功能"
+  help_enable_file_scanning: "掃描上傳的Office文件內容"
+  help_max_file_size_mb: "允許上傳的最大檔案大小"
+  help_retention_days: "日誌記錄的保留天數"
+  help_auto_cleanup: "自動清理過期的日誌記錄" 
