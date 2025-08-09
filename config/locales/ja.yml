@@ -1,0 +1,130 @@
+ja:
+  label_sensitive_data_guard: "機密データガード"
+  label_sensitive_logs: "機密操作ログ"
+  label_sensitive_log: "機密操作ログ"
+  
+  # フィールドラベル
+  field_id: "ID"
+  field_user: "ユーザー"
+  field_project: "プロジェクト"
+  field_created_on: "作成日"
+  field_risk_level: "リスクレベル"
+  field_operation_type: "操作タイプ"
+  field_content_type: "コンテンツタイプ"
+  field_detected_patterns: "検出されたパターン"
+  field_content_preview: "コンテンツプレビュー"
+  field_override_reason: "オーバーライド理由"
+  field_file_type: "ファイルタイプ"
+  field_file_size: "ファイルサイズ"
+  field_ip_address: "IPアドレス"
+  field_user_agent: "ユーザーエージェント"
+  field_start_date: "開始日"
+  field_end_date: "終了日"
+  
+  # 風險等級標籤
+  label_high_risk: "高リスク"
+  label_medium_risk: "中リスク"
+  label_low_risk: "低リスク"
+  label_unknown_risk: "不明なリスク"
+  
+  # 操作タイプ
+  label_detection: "検出"
+  label_blocked: "ブロック"
+  label_warning: "警告"
+  label_override: "オーバーライド"
+  
+  # コンテンツタイプ
+  label_issue_description: "課題の説明"
+  label_issue_note: "課題のメモ"
+  label_wiki_page: "Wikiページ"
+  label_document: "ドキュメント"
+  label_file_attachment: "ファイル添付"
+  label_message: "フォーラムメッセージ"
+  label_attachment: "添付ファイル"
+  
+  # 設定ラベル
+  label_enable_plugin: "プラグインを有効化"
+  label_enable_file_scanning: "ファイルスキャンを有効化"
+  label_max_file_size_mb: "最大ファイルサイズ (MB)"
+  label_enable_email_notifications: "メール通知を有効化"
+  label_enable_slack_notifications: "Slack Webhook URL"
+  label_retention_days_high_risk: "高リスク保持日数"
+  label_retention_days_standard: "標準保持日数"
+  label_retention_days_override: "オーバーライド保持日数"
+  label_auto_cleanup_enabled: "自動クリーンアップを有効化"
+  label_enable_critical_risk_detection: "重大リスク検出を有効化"
+  label_enable_high_risk_detection: "高リスク検出を有効化"
+  label_enable_medium_risk_detection: "中リスク検出を有効化"
+  label_enable_low_risk_detection: "低リスク検出を有効化"
+  label_high_risk_strategy: "高リスク戦略"
+  label_medium_risk_strategy: "中リスク戦略"
+  label_low_risk_strategy: "低リスク戦略"
+  
+  # 個別項目設定
+  label_enable_credential_combination_detection: "認証情報組み合わせ検出を有効化"
+  label_enable_taiwan_id_detection: "台湾身分証番号検出を有効化"
+  label_enable_credit_card_detection: "クレジットカード番号検出を有効化"
+  label_enable_password_keyword_detection: "パスワードキーワード検出を有効化"
+  label_enable_database_connection_detection: "データベース接続検出を有効化"
+  label_enable_taiwan_mobile_detection: "台湾携帯電話番号検出を有効化"
+  label_enable_internal_ip_detection: "内部IPアドレス検出を有効化"
+  label_enable_email_detection: "メールアドレス検出を有効化"
+  
+  # ボタン
+  button_export: "エクスポート"
+  button_cleanup: "クリーンアップ"
+  button_apply: "適用"
+  button_clear: "クリア"
+  button_back: "戻る"
+  button_view: "表示"
+  button_delete: "削除"
+  
+  # メッセージ
+  text_are_you_sure: "この操作を実行してもよろしいですか？"
+  label_no_data: "データなし"
+  label_all: "すべて"
+  label_total: "合計"
+  
+  # ヘルプテキスト
+  help_enable_plugin: "機密データ保護機能を有効化"
+  help_enable_file_scanning: "アップロードされたファイルの内容をスキャン"
+  help_max_file_size_mb: "このサイズを超えるファイルはスキャンされません"
+  help_retention_days: "ログ保持期間を設定、期限を超えたログは自動的にクリーンアップされます"
+  help_auto_cleanup: "期限切れのログ記録を定期的に自動クリーンアップ"
+  
+  # エラーメッセージ
+  error_sensitive_data_detected: "機密データが検出されました、送信がブロックされました"
+  error_failed_to_log: "機密操作のログ記録に失敗しました"
+  error_failed_to_delete: "削除に失敗しました"
+  error_attachment_scan_failed: "添付ファイルのスキャンに失敗しました"
+  
+  # 成功メッセージ
+  notice_successful_update: "設定が正常に更新されました"
+  notice_successful_delete: "レコードが正常に削除されました"
+  notice_cleanup_completed: "クリーンアップが完了しました、%{count}件のレコードが削除されました"
+  
+  # 非同期処理
+  label_async_processing: "非同期処理"
+  label_batch_processing: "バッチ処理"
+  label_processing_status: "処理状況"
+  label_processing_completed: "処理完了"
+  label_processing_failed: "処理失敗"
+  
+  # 監視
+  label_performance_monitoring: "パフォーマンス監視"
+  label_system_health: "システム健全性"
+  label_processing_stats: "処理統計"
+  label_response_time: "応答時間"
+  label_throughput: "スループット"
+  
+  # ファイル処理
+  label_file_processing: "ファイル処理"
+  label_secure_file_handling: "セキュアファイル処理"
+  label_file_validation: "ファイル検証"
+  label_file_integrity: "ファイル整合性"
+  
+  # 通知
+  label_notification_settings: "通知設定"
+  label_notification_channels: "通知チャンネル"
+  label_notification_frequency: "通知頻度"
+  label_notification_history: "通知履歴"

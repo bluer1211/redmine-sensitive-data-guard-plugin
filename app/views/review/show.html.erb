@@ -1,0 +1,221 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+<% end %>
+
+<div class="contextual">
+  <%= link_to '← 返回列表', reviews_path, class: 'icon icon-list' %>
+  <% if @log.can_be_reviewed? %>
+    <%= link_to '✅ 核准', approve_review_path(@log), method: :post, 
+        class: 'icon icon-checked', data: { confirm: '確定要核准此記錄嗎？' } %>
+    <%= link_to '❌ 拒絕', reject_review_path(@log), method: :post, 
+        class: 'icon icon-del', data: { confirm: '確定要拒絕此記錄嗎？' } %>
+  <% end %>
+</div>
+
+<h2>🔍 敏感資料記錄詳情 #<%= @log.id %></h2>
+
+<div class="log-details">
+  <!-- 基本資訊 -->
+  <fieldset class="box">
+    <legend>基本資訊</legend>
+    
+    <div class="info-row">
+      <div class="info-label">記錄 ID:</div>
+      <div class="info-value"><%= @log.id %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">操作者:</div>
+      <div class="info-value"><%= @log.user.name %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">專案:</div>
+      <div class="info-value"><%= @log.project&.name || '系統' %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">內容類型:</div>
+      <div class="info-value"><%= @log.content_type_display %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">操作類型:</div>
+      <div class="info-value"><%= @log.operation_type_display %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">風險等級:</div>
+      <div class="info-value">
+        <span class="risk-level risk-<%= @log.risk_level %>">
+          <%= @log.risk_level_display %>
+        </span>
+      </div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">操作時間:</div>
+      <div class="info-value"><%= format_time(@log.created_at) %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">IP 位址:</div>
+      <div class="info-value"><%= @log.ip_address || '未記錄' %></div>
+    </div>
+  </fieldset>
+  
+  <!-- 審核資訊 -->
+  <fieldset class="box">
+    <legend>審核資訊</legend>
+    
+    <div class="info-row">
+      <div class="info-label">審核狀態:</div>
+      <div class="info-value">
+        <span class="review-status review-<%= @log.review_status %>">
+          <%= @log.review_status_display %>
+        </span>
+      </div>
+    </div>
+    
+    <% if @log.reviewed? %>
+      <div class="info-row">
+        <div class="info-label">審核者:</div>
+        <div class="info-value"><%= @log.reviewer&.name || '未知' %></div>
+      </div>
+      
+      <div class="info-row">
+        <div class="info-label">審核時間:</div>
+        <div class="info-value"><%= format_time(@log.reviewed_at) %></div>
+      </div>
+      
+      <div class="info-row">
+        <div class="info-label">審核決定:</div>
+        <div class="info-value"><%= @log.review_decision_display %></div>
+      </div>
+      
+      <% if @log.review_comment.present? %>
+        <div class="info-row">
+          <div class="info-label">審核意見:</div>
+          <div class="info-value review-comment"><%= simple_format(@log.review_comment) %></div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="info-row">
+        <div class="info-value">此記錄尚未審核</div>
+      </div>
+    <% end %>
+  </fieldset>
+  
+  <!-- 偵測內容 -->
+  <fieldset class="box">
+    <legend>偵測內容</legend>
+    
+    <% if @log.detected_patterns.present? %>
+      <div class="info-row">
+        <div class="info-label">偵測模式:</div>
+        <div class="info-value">
+          <% @log.detected_patterns_parsed.each do |pattern| %>
+            <span class="detected-pattern"><%= pattern['type'] %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if @log.content_preview.present? %>
+      <div class="info-row">
+        <div class="info-label">內容預覽:</div>
+        <div class="info-value content-preview">
+          <div class="preview-header">
+            <span>原始內容（已遮罩敏感資訊）</span>
+            <button type="button" class="toggle-preview" data-target="original-content">顯示/隱藏</button>
+          </div>
+          <div class="preview-content" id="original-content" style="display: none;">
+            <%= simple_format(@log.masked_content_preview) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if @log.file_type.present? %>
+      <div class="info-row">
+        <div class="info-label">檔案類型:</div>
+        <div class="info-value"><%= @log.file_type.upcase %></div>
+      </div>
+    <% end %>
+    
+    <% if @log.file_size.present? %>
+      <div class="info-row">
+        <div class="info-label">檔案大小:</div>
+        <div class="info-value"><%= number_to_human_size(@log.file_size) %></div>
+      </div>
+    <% end %>
+    
+    <% if @log.override_reason.present? %>
+      <div class="info-row">
+        <div class="info-label">覆蓋原因:</div>
+        <div class="info-value"><%= simple_format(@log.override_reason) %></div>
+      </div>
+    <% end %>
+  </fieldset>
+  
+  <!-- 審核操作 -->
+  <% if @log.can_be_reviewed? %>
+    <fieldset class="box">
+      <legend>審核操作</legend>
+      
+      <div class="review-actions">
+        <div class="review-action approve">
+          <h4>✅ 核准操作</h4>
+          <%= form_tag approve_review_path(@log), method: :post do %>
+            <div class="form-group">
+              <%= label_tag :decision, '核准決定:' %>
+              <%= select_tag :decision, options_for_select([
+                ['允許', 'allow'],
+                ['修改', 'modify'],
+                ['升級', 'escalate']
+              ]), required: true %>
+            </div>
+            
+            <div class="form-group">
+              <%= label_tag :comment, '審核意見:' %>
+              <%= text_area_tag :comment, '', rows: 4, placeholder: '請輸入審核意見（可選）' %>
+            </div>
+            
+            <%= submit_tag '核准', class: 'button positive' %>
+          <% end %>
+        </div>
+        
+        <div class="review-action reject">
+          <h4>❌ 拒絕操作</h4>
+          <%= form_tag reject_review_path(@log), method: :post do %>
+            <div class="form-group">
+              <%= label_tag :decision, '拒絕決定:' %>
+              <%= select_tag :decision, options_for_select([
+                ['阻擋', 'block'],
+                ['修改', 'modify'],
+                ['升級', 'escalate']
+              ]), required: true %>
+            </div>
+            
+            <div class="form-group">
+              <%= label_tag :comment, '拒絕原因:' %>
+              <%= text_area_tag :comment, '', rows: 4, placeholder: '請輸入拒絕原因（必填）', required: true %>
+            </div>
+            
+            <%= submit_tag '拒絕', class: 'button negative' %>
+          <% end %>
+        </div>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
+
+<script>
+$(document).ready(function() {
+  // 切換內容預覽
+  $('.toggle-preview').click(function() {
+    var target = $('#' + $(this).data('target'));
+    target.toggle();
+  });
+});
+</script>

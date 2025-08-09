@@ -1,0 +1,160 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+  <style>
+    .performance-monitor {
+      margin: 20px 0;
+    }
+    
+    .performance-stats {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-item {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 15px;
+      min-width: 150px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stat-item .label {
+      display: block;
+      font-size: 12px;
+      color: #6c757d;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    
+    .stat-item .value {
+      display: block;
+      font-size: 24px;
+      font-weight: bold;
+      color: #495057;
+    }
+    
+    .stat-item .unit {
+      display: block;
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 2px;
+    }
+    
+    .system-health {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .system-health h3 {
+      margin-top: 0;
+      color: #495057;
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 10px;
+    }
+    
+    .health-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f8f9fa;
+    }
+    
+    .health-item:last-child {
+      border-bottom: none;
+    }
+    
+    .health-status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .health-status.healthy {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .health-status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+<% end %>
+
+<div class="performance-monitor">
+  <h2><%= l(:label_performance_monitoring) %></h2>
+  
+  <!-- 效能統計 -->
+  <div class="performance-stats">
+    <div class="stat-item">
+      <span class="label"><%= l(:label_total_users) %></span>
+      <span class="value"><%= @performance_stats[:total_users] %></span>
+    </div>
+    
+    <div class="stat-item">
+      <span class="label"><%= l(:label_total_projects) %></span>
+      <span class="value"><%= @performance_stats[:total_projects] %></span>
+    </div>
+    
+    <div class="stat-item">
+      <span class="label"><%= l(:label_total_issues) %></span>
+      <span class="value"><%= @performance_stats[:total_issues] %></span>
+    </div>
+    
+    <div class="stat-item">
+      <span class="label"><%= l(:label_total_attachments) %></span>
+      <span class="value"><%= @performance_stats[:total_attachments] %></span>
+    </div>
+  </div>
+  
+  <!-- 系統健康狀態 -->
+  <div class="system-health">
+    <h3><%= l(:label_system_health) %></h3>
+    
+    <div class="health-item">
+      <span><%= l(:label_database_status) %></span>
+      <span class="health-status <%= @system_health[:database_status] %>">
+        <%= @system_health[:database_status] %>
+      </span>
+    </div>
+    
+    <div class="health-item">
+      <span><%= l(:label_file_system_status) %></span>
+      <span class="health-status <%= @system_health[:file_system_status] %>">
+        <%= @system_health[:file_system_status] %>
+      </span>
+    </div>
+    
+    <div class="health-item">
+      <span><%= l(:label_plugin_status) %></span>
+      <span class="health-status <%= @system_health[:plugin_status] %>">
+        <%= @system_health[:plugin_status] %>
+      </span>
+    </div>
+    
+    <div class="health-item">
+      <span><%= l(:label_last_backup) %></span>
+      <span>
+        <%= @system_health[:last_backup] ? format_time(@system_health[:last_backup]) : l(:label_no_backup) %>
+      </span>
+    </div>
+  </div>
+  
+  <!-- 操作按鈕 -->
+  <div class="actions">
+    <%= link_to l(:label_export_report), performance_monitor_path(format: 'csv'), class: 'button' %>
+    <%= link_to l(:label_cleanup_metrics), performance_monitor_path, method: :post, class: 'button', 
+                confirm: l(:text_confirm_cleanup_metrics) %>
+  </div>
+</div>

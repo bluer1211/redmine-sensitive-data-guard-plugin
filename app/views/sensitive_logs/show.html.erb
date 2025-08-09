@@ -1,0 +1,116 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+<% end %>
+
+<div class="contextual">
+  <%= link_to l(:button_back), sensitive_logs_path(project_id: @log.project), class: 'icon icon-back' %>
+  <% if User.current.admin? %>
+    <%= link_to l(:button_delete), sensitive_log_path(@log), method: :delete, 
+        data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del' %>
+  <% end %>
+</div>
+
+<h2><%= l(:label_sensitive_log) %> #<%= @log.id %></h2>
+
+<div class="details">
+  <div class="splitcontent">
+    <div class="splitcontentleft">
+      <div class="attribute">
+        <div class="label"><%= l(:field_user) %>:</div>
+        <div class="value"><%= link_to_user @log.user %></div>
+      </div>
+      
+      <div class="attribute">
+        <div class="label"><%= l(:field_project) %>:</div>
+        <div class="value"><%= link_to_project @log.project if @log.project %></div>
+      </div>
+      
+      <div class="attribute">
+        <div class="label"><%= l(:field_operation_type) %>:</div>
+        <div class="value"><%= @log.operation_type_display %></div>
+      </div>
+      
+      <div class="attribute">
+        <div class="label"><%= l(:field_content_type) %>:</div>
+        <div class="value"><%= @log.content_type_display %></div>
+      </div>
+    </div>
+    
+    <div class="splitcontentright">
+      <div class="attribute">
+        <div class="label"><%= l(:field_risk_level) %>:</div>
+        <div class="value">
+          <span class="risk-badge risk-<%= @log.risk_level %>">
+            <%= @log.risk_level_display %>
+          </span>
+        </div>
+      </div>
+      
+      <div class="attribute">
+        <div class="label"><%= l(:field_ip_address) %>:</div>
+        <div class="value"><%= @log.ip_address %></div>
+      </div>
+      
+      <div class="attribute">
+        <div class="label"><%= l(:field_created_on) %>:</div>
+        <div class="value"><%= format_time(@log.created_at) %></div>
+      </div>
+      
+      <% if @log.file_type.present? %>
+        <div class="attribute">
+          <div class="label"><%= l(:field_file_type) %>:</div>
+          <div class="value"><%= @log.file_type %></div>
+        </div>
+      <% end %>
+      
+      <% if @log.file_size.present? %>
+        <div class="attribute">
+          <div class="label"><%= l(:field_file_size) %>:</div>
+          <div class="value"><%= number_to_human_size(@log.file_size) %></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <% if @log.detected_patterns.present? %>
+    <div class="attribute">
+      <div class="label"><%= l(:field_detected_patterns) %>:</div>
+      <div class="value">
+        <div class="detected-patterns">
+          <% @log.detected_patterns_parsed.each do |pattern| %>
+            <span class="pattern-badge"><%= pattern %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <% if @log.content_preview.present? %>
+    <div class="attribute">
+      <div class="label"><%= l(:field_content_preview) %>:</div>
+      <div class="value">
+        <div class="content-preview">
+          <pre><%= @log.masked_content_preview %></pre>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <% if @log.override_reason.present? %>
+    <div class="attribute">
+      <div class="label"><%= l(:field_override_reason) %>:</div>
+      <div class="value"><%= @log.override_reason %></div>
+    </div>
+  <% end %>
+  
+  <% if @log.user_agent.present? %>
+    <div class="attribute">
+      <div class="label"><%= l(:field_user_agent) %>:</div>
+      <div class="value">
+        <div class="user-agent">
+          <%= @log.user_agent %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

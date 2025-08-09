@@ -1,0 +1,189 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+<% end %>
+
+<div class="contextual">
+  <%= link_to '📊 審核統計', statistics_reviews_path, class: 'icon icon-stats' %>
+  <%= link_to '📋 敏感日誌', sensitive_logs_path, class: 'icon icon-list' %>
+</div>
+
+<h2>🔍 敏感資料審核管理</h2>
+
+<!-- 統計概覽 -->
+<div class="statistics-overview">
+  <div class="stat-card">
+    <h3>待審核</h3>
+    <div class="stat-number pending"><%= @statistics[:total_pending] %></div>
+  </div>
+  <div class="stat-card">
+    <h3>已核准</h3>
+    <div class="stat-number approved"><%= @statistics[:total_approved] %></div>
+  </div>
+  <div class="stat-card">
+    <h3>已拒絕</h3>
+    <div class="stat-number rejected"><%= @statistics[:total_rejected] %></div>
+  </div>
+  <div class="stat-card">
+    <h3>審核率</h3>
+    <div class="stat-number"><%= @statistics[:review_rate] %>%</div>
+  </div>
+</div>
+
+<!-- 篩選表單 -->
+<%= form_tag reviews_path, method: :get, class: 'filter-form' do %>
+  <fieldset class="box">
+    <legend>篩選條件</legend>
+    
+    <div class="filter-row">
+      <div class="filter-field">
+        <%= label_tag :review_status, '審核狀態' %>
+        <%= select_tag :review_status, options_for_select([
+          ['全部', ''],
+          ['待審核', 'pending'],
+          ['已核准', 'approved'],
+          ['已拒絕', 'rejected']
+        ], params[:review_status]) %>
+      </div>
+      
+      <div class="filter-field">
+        <%= label_tag :risk_level, '風險等級' %>
+        <%= select_tag :risk_level, options_for_select([
+          ['全部', ''],
+          ['高風險', 'high'],
+          ['中風險', 'medium'],
+          ['低風險', 'low']
+        ], params[:risk_level]) %>
+      </div>
+      
+      <div class="filter-field">
+        <%= label_tag :project_id, '專案' %>
+        <%= select_tag :project_id, options_from_collection_for_select(Project.visible, :id, :name, params[:project_id]), 
+            prompt: '全部專案' %>
+      </div>
+    </div>
+    
+    <div class="filter-row">
+      <div class="filter-field">
+        <%= label_tag :keyword, '關鍵字搜尋' %>
+        <%= text_field_tag :keyword, params[:keyword], placeholder: '搜尋內容、偵測模式或審核意見' %>
+      </div>
+      
+      <div class="filter-field">
+        <%= label_tag :requires_review, '需要審核' %>
+        <%= check_box_tag :requires_review, 'true', params[:requires_review] == 'true' %>
+      </div>
+      
+      <div class="filter-actions">
+        <%= submit_tag '篩選', class: 'button' %>
+        <%= link_to '清除', reviews_path, class: 'button' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<!-- 批量操作 -->
+<% if @logs.any? %>
+  <div class="bulk-actions">
+    <h3>批量操作</h3>
+    <%= form_tag bulk_approve_reviews_path, method: :post, data: { confirm: '確定要核准選中的記錄嗎？' } do %>
+      <%= hidden_field_tag :log_ids, '', id: 'selected_log_ids' %>
+      <%= text_area_tag :comment, '', placeholder: '審核意見（可選）', rows: 2 %>
+      <%= select_tag :decision, options_for_select([
+        ['允許', 'allow'],
+        ['修改', 'modify'],
+        ['升級', 'escalate']
+      ]) %>
+      <%= submit_tag '批量核准', class: 'button positive' %>
+    <% end %>
+    
+    <%= form_tag bulk_reject_reviews_path, method: :post, data: { confirm: '確定要拒絕選中的記錄嗎？' } do %>
+      <%= hidden_field_tag :log_ids, '', id: 'selected_log_ids_reject' %>
+      <%= text_area_tag :comment, '', placeholder: '拒絕原因（必填）', rows: 2, required: true %>
+      <%= select_tag :decision, options_for_select([
+        ['阻擋', 'block'],
+        ['修改', 'modify'],
+        ['升級', 'escalate']
+      ]) %>
+      <%= submit_tag '批量拒絕', class: 'button negative' %>
+    <% end %>
+  </div>
+<% end %>
+
+<!-- 記錄列表 -->
+<% if @logs.any? %>
+  <div class="logs-table">
+    <table class="list">
+      <thead>
+        <tr>
+          <th><%= check_box_tag 'select_all', '1', false, id: 'select_all_logs' %></th>
+          <th>ID</th>
+          <th>操作者</th>
+          <th>專案</th>
+          <th>內容類型</th>
+          <th>風險等級</th>
+          <th>審核狀態</th>
+          <th>操作時間</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @logs.each do |log| %>
+          <tr class="<%= cycle('odd', 'even') %> log-row" data-log-id="<%= log.id %>">
+            <td><%= check_box_tag "log_ids[]", log.id, false, class: 'log-checkbox' %></td>
+            <td><%= log.id %></td>
+            <td><%= log.user.name %></td>
+            <td><%= log.project&.name || '系統' %></td>
+            <td><%= log.content_type_display %></td>
+            <td>
+              <span class="risk-level risk-<%= log.risk_level %>">
+                <%= log.risk_level_display %>
+              </span>
+            </td>
+            <td>
+              <span class="review-status review-<%= log.review_status %>">
+                <%= log.review_status_display %>
+              </span>
+            </td>
+            <td><%= format_time(log.created_at) %></td>
+            <td>
+              <%= link_to '查看', review_path(log), class: 'icon icon-view' %>
+              <% if log.can_be_reviewed? %>
+                <%= link_to '核准', approve_review_path(log), method: :post, 
+                    class: 'icon icon-checked', data: { confirm: '確定要核准此記錄嗎？' } %>
+                <%= link_to '拒絕', reject_review_path(log), method: :post, 
+                    class: 'icon icon-del', data: { confirm: '確定要拒絕此記錄嗎？' } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <%= paginate @logs %>
+<% else %>
+  <p class="nodata">沒有找到符合條件的記錄</p>
+<% end %>
+
+<script>
+$(document).ready(function() {
+  // 全選功能
+  $('#select_all_logs').change(function() {
+    $('.log-checkbox').prop('checked', $(this).is(':checked'));
+    updateSelectedIds();
+  });
+  
+  // 個別選擇
+  $('.log-checkbox').change(function() {
+    updateSelectedIds();
+  });
+  
+  function updateSelectedIds() {
+    var selectedIds = [];
+    $('.log-checkbox:checked').each(function() {
+      selectedIds.push($(this).val());
+    });
+    $('#selected_log_ids, #selected_log_ids_reject').val(selectedIds.join(','));
+  }
+});
+</script>

@@ -1,116 +1,276 @@
-<div class="box tabular">
-  <h3><%= l(:label_plugin_settings) %></h3>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+<% end %>
+
+<div class="sensitive-data-guard-settings">
+  <h2>🔒 敏感資料防護設定</h2>
   
-  <p>
-    <%= label_tag 'settings[enabled]', l(:label_enable_plugin) %>
-    <%= check_box_tag 'settings[enabled]', 1, @settings['enabled'] %>
-    <em class="info"><%= l(:help_enable_plugin) %></em>
-  </p>
+  <!-- 基本設定 -->
+  <fieldset class="box">
+    <legend>基本設定</legend>
+    
+    <p>
+      <label>
+        <%= check_box_tag 'settings[enabled]', 1, @settings['enabled'] %>
+        啟用敏感資料防護功能
+      </label>
+    </p>
+    
+    <p>
+      <label>
+        <%= check_box_tag 'settings[enable_file_scanning]', 1, @settings['enable_file_scanning'] %>
+        啟用檔案掃描
+      </label>
+    </p>
+    
+    <p>
+      <label for="settings[max_file_size_mb]">最大檔案大小 (MB):</label>
+      <%= number_field_tag 'settings[max_file_size_mb]', @settings['max_file_size_mb'], 
+          min: 1, max: 100, size: 10 %>
+    </p>
+  </fieldset>
   
-  <p>
-    <%= label_tag 'settings[enable_file_scanning]', l(:label_enable_file_scanning) %>
-    <%= check_box_tag 'settings[enable_file_scanning]', 1, @settings['enable_file_scanning'] %>
-    <em class="info"><%= l(:help_enable_file_scanning) %></em>
-  </p>
+  <!-- 風險等級設定 -->
+  <fieldset class="box">
+    <legend>風險等級設定</legend>
+    
+    <!-- 高風險 -->
+    <div class="risk-level">
+      <h4>🔴 高風險偵測</h4>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_high_risk_detection]', 1, @settings['enable_high_risk_detection'] != false %>
+          啟用高風險偵測
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_taiwan_id_detection]', 1, @settings['enable_taiwan_id_detection'] != false %>
+          台灣身分證號碼
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_credit_card_detection]', 1, @settings['enable_credit_card_detection'] != false %>
+          信用卡號碼
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_password_keyword_detection]', 1, @settings['enable_password_keyword_detection'] != false %>
+          密碼關鍵字
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_credential_combination_detection]', 1, @settings['enable_credential_combination_detection'] != false %>
+          帳號密碼組合
+        </label>
+      </p>
+      <p>
+        <label for="settings[high_risk_strategy]">處理策略:</label>
+        <%= select_tag 'settings[high_risk_strategy]', 
+            options_for_select([
+              ['阻擋', 'block'],
+              ['警告', 'warn'],
+              ['記錄', 'log']
+            ], @settings['high_risk_strategy'] || 'block') %>
+      </p>
+    </div>
+    
+    <!-- 中風險 -->
+    <div class="risk-level">
+      <h4>🟡 中風險偵測</h4>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_medium_risk_detection]', 1, @settings['enable_medium_risk_detection'] != false %>
+          啟用中風險偵測
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_taiwan_mobile_detection]', 1, @settings['enable_taiwan_mobile_detection'] != false %>
+          台灣手機號碼
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_internal_ip_detection]', 1, @settings['enable_internal_ip_detection'] != false %>
+          內部 IP 位址
+        </label>
+      </p>
+      <p>
+        <label for="settings[medium_risk_strategy]">處理策略:</label>
+        <%= select_tag 'settings[medium_risk_strategy]', 
+            options_for_select([
+              ['阻擋', 'block'],
+              ['警告', 'warn'],
+              ['記錄', 'log']
+            ], @settings['medium_risk_strategy'] || 'warn') %>
+      </p>
+    </div>
+    
+    <!-- 低風險 -->
+    <div class="risk-level">
+      <h4>🟢 低風險偵測</h4>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_low_risk_detection]', 1, @settings['enable_low_risk_detection'] != false %>
+          啟用低風險偵測
+        </label>
+      </p>
+      <p>
+        <label>
+          <%= check_box_tag 'settings[enable_email_detection]', 1, @settings['enable_email_detection'] != false %>
+          Email 地址
+        </label>
+      </p>
+      <p>
+        <label for="settings[low_risk_strategy]">處理策略:</label>
+        <%= select_tag 'settings[low_risk_strategy]', 
+            options_for_select([
+              ['阻擋', 'block'],
+              ['警告', 'warn'],
+              ['記錄', 'log']
+            ], @settings['low_risk_strategy'] || 'log') %>
+      </p>
+    </div>
+  </fieldset>
   
-  <p>
-    <%= label_tag 'settings[max_file_size_mb]', l(:label_max_file_size_mb) %>
-    <%= number_field_tag 'settings[max_file_size_mb]', @settings['max_file_size_mb'], min: 1, max: 100 %>
-    <em class="info"><%= l(:help_max_file_size_mb) %></em>
-  </p>
+  <!-- 通知設定 -->
+  <fieldset class="box">
+    <legend>通知設定</legend>
+    
+    <p>
+      <label>
+        <%= check_box_tag 'settings[email_notifications]', 1, @settings['email_notifications'] %>
+        啟用 Email 通知
+      </label>
+    </p>
+    
+    <p>
+      <label for="settings[notification_recipients]">收件人 Email:</label>
+      <%= text_field_tag 'settings[notification_recipients]', @settings['notification_recipients'], 
+          size: 60, placeholder: 'admin@example.com, security@company.com' %>
+      <br><small>多個 Email 請用逗號分隔</small>
+    </p>
+    
+    <p>
+      <label for="settings[notification_frequency]">通知頻率:</label>
+      <%= select_tag 'settings[notification_frequency]', 
+          options_for_select([
+            ['立即', 'immediate'],
+            ['每小時', 'hourly'],
+            ['每日', 'daily'],
+            ['每週', 'weekly']
+          ], @settings['notification_frequency'] || 'immediate') %>
+    </p>
+    
+    <p>
+      <label for="settings[slack_webhook_url]">Slack Webhook URL:</label>
+      <%= text_field_tag 'settings[slack_webhook_url]', @settings['slack_webhook_url'], 
+          size: 60, placeholder: 'https://hooks.slack.com/services/...' %>
+    </p>
+    
+    <!-- Email 測試功能 -->
+    <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+      <h4>🧪 Email 測試功能</h4>
+      <p>
+        <label for="test_email_recipients">測試收件人:</label>
+        <%= text_field_tag 'test_email_recipients', @settings['notification_recipients'], 
+            size: 60, placeholder: 'test@example.com', id: 'test_email_recipients' %>
+        <br><small>輸入要測試的 Email 地址</small>
+      </p>
+      <p>
+        <%= button_tag '📧 發送測試 Email', type: 'button', 
+            onclick: 'sendTestEmail()', 
+            style: 'background: #007cba; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;' %>
+        <span id="test_email_status" style="margin-left: 10px;"></span>
+      </p>
+    </div>
+  </fieldset>
   
-  <h3>通知設定</h3>
+  <!-- 日誌保留設定 -->
+  <fieldset class="box">
+    <legend>日誌保留設定</legend>
+    
+    <p>
+      <label for="settings[retention_days_high_risk]">高風險日誌保留天數:</label>
+      <%= number_field_tag 'settings[retention_days_high_risk]', @settings['retention_days_high_risk'], 
+          min: 365, max: 3650, size: 10 %>
+    </p>
+    
+    <p>
+      <label for="settings[retention_days_standard]">標準日誌保留天數:</label>
+      <%= number_field_tag 'settings[retention_days_standard]', @settings['retention_days_standard'], 
+          min: 30, max: 3650, size: 10 %>
+    </p>
+    
+    <p>
+      <label>
+        <%= check_box_tag 'settings[auto_cleanup_enabled]', 1, @settings['auto_cleanup_enabled'] %>
+        啟用自動清理過期日誌
+      </label>
+    </p>
+  </fieldset>
   
-  <p>
-    <%= label_tag 'settings[email_notifications]', l(:label_enable_email_notifications) %>
-    <%= check_box_tag 'settings[email_notifications]', 1, @settings['email_notifications'] %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[slack_webhook_url]', l(:label_enable_slack_notifications) %>
-    <%= text_field_tag 'settings[slack_webhook_url]', @settings['slack_webhook_url'], size: 60 %>
-  </p>
-  
-  <h3>日誌保留設定</h3>
-  
-  <p>
-    <%= label_tag 'settings[retention_days_high_risk]', l(:label_retention_days_high_risk) %>
-    <%= number_field_tag 'settings[retention_days_high_risk]', @settings['retention_days_high_risk'], min: 365, max: 3650 %>
-    <em class="info"><%= l(:help_retention_days) %></em>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[retention_days_standard]', l(:label_retention_days_standard) %>
-    <%= number_field_tag 'settings[retention_days_standard]', @settings['retention_days_standard'], min: 30, max: 3650 %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[retention_days_override]', l(:label_retention_days_override) %>
-    <%= number_field_tag 'settings[retention_days_override]', @settings['retention_days_override'], min: 365, max: 3650 %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[auto_cleanup_enabled]', l(:label_auto_cleanup_enabled) %>
-    <%= check_box_tag 'settings[auto_cleanup_enabled]', 1, @settings['auto_cleanup_enabled'] %>
-    <em class="info"><%= l(:help_auto_cleanup) %></em>
-  </p>
-  
-  <h3>風險等級設定</h3>
-  
-  <p>
-    <%= label_tag 'settings[enable_high_risk_detection]', '啟用高風險偵測' %>
-    <%= check_box_tag 'settings[enable_high_risk_detection]', 1, @settings['enable_high_risk_detection'] != false %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[enable_medium_risk_detection]', '啟用中風險偵測' %>
-    <%= check_box_tag 'settings[enable_medium_risk_detection]', 1, @settings['enable_medium_risk_detection'] != false %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[enable_low_risk_detection]', '啟用低風險偵測' %>
-    <%= check_box_tag 'settings[enable_low_risk_detection]', 1, @settings['enable_low_risk_detection'] != false %>
-  </p>
-  
-  <h3>處理策略設定</h3>
-  
-  <p>
-    <%= label_tag 'settings[high_risk_strategy]', '高風險處理策略' %>
-    <%= select_tag 'settings[high_risk_strategy]', 
-        options_for_select([
-          ['阻擋', 'block'],
-          ['警告', 'warn'],
-          ['記錄', 'log']
-        ], @settings['high_risk_strategy'] || 'block') %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[medium_risk_strategy]', '中風險處理策略' %>
-    <%= select_tag 'settings[medium_risk_strategy]', 
-        options_for_select([
-          ['阻擋', 'block'],
-          ['警告', 'warn'],
-          ['記錄', 'log']
-        ], @settings['medium_risk_strategy'] || 'warn') %>
-  </p>
-  
-  <p>
-    <%= label_tag 'settings[low_risk_strategy]', '低風險處理策略' %>
-    <%= select_tag 'settings[low_risk_strategy]', 
-        options_for_select([
-          ['阻擋', 'block'],
-          ['警告', 'warn'],
-          ['記錄', 'log']
-        ], @settings['low_risk_strategy'] || 'log') %>
-  </p>
+  <!-- 快速操作 -->
+  <fieldset class="box">
+    <legend>快速操作</legend>
+    
+    <p>
+      <%= link_to '📊 查看敏感操作日誌', sensitive_logs_path, class: 'button' %>
+      <%= link_to '🧹 清理過期日誌', cleanup_sensitive_logs_path, method: :post, 
+          data: { confirm: '確定要清理過期日誌嗎？' }, class: 'button' %>
+      <%= link_to '📋 風險等級說明', risk_levels_sensitive_logs_path, class: 'button' %>
+    </p>
+  </fieldset>
 </div>
 
-<div class="box">
-  <h3>快速操作</h3>
+<script>
+function sendTestEmail() {
+  const recipients = document.getElementById('test_email_recipients').value.trim();
+  const statusElement = document.getElementById('test_email_status');
   
-  <p>
-    <%= link_to '查看敏感操作日誌', sensitive_logs_path, class: 'button' %>
-    <%= link_to '清理過期日誌', cleanup_sensitive_logs_path, method: :post, 
-        data: { confirm: '確定要清理過期日誌嗎？' }, class: 'button' %>
-  </p>
-</div> 
+  if (!recipients) {
+    statusElement.innerHTML = '<span style="color: red;">❌ 請輸入收件人 Email 地址</span>';
+    return;
+  }
+  
+  // 顯示發送中狀態
+  statusElement.innerHTML = '<span style="color: blue;">⏳ 發送中...</span>';
+  
+  // 發送 AJAX 請求
+  fetch('/sensitive_data_guard_settings/test_email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({ recipients: recipients })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      statusElement.innerHTML = '<span style="color: green;">✅ ' + data.message + '</span>';
+    } else {
+      statusElement.innerHTML = '<span style="color: red;">❌ ' + data.message + '</span>';
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    statusElement.innerHTML = '<span style="color: red;">❌ 發送失敗，請檢查網路連線</span>';
+  });
+}
+
+// 頁面載入時初始化
+document.addEventListener('DOMContentLoaded', function() {
+  // 如果設定中有收件人，自動填入測試欄位
+  const notificationRecipients = document.querySelector('input[name="settings[notification_recipients]"]');
+  const testRecipients = document.getElementById('test_email_recipients');
+  
+  if (notificationRecipients && testRecipients && notificationRecipients.value) {
+    testRecipients.value = notificationRecipients.value;
+  }
+});
+</script> 

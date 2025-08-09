@@ -1,0 +1,421 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+  <style>
+    /* 內聯樣式確保表格標題對比度 */
+    table.list.sensitive-logs thead tr th,
+    table.list.sensitive-logs th,
+    .sensitive-logs thead tr th,
+    .sensitive-logs th {
+      background: #000000 !important;
+      color: #ffffff !important;
+      font-weight: bold !important;
+      text-shadow: 1px 1px 2px rgba(0,0,0,1) !important;
+    }
+    
+    table.list.sensitive-logs thead tr th a,
+    table.list.sensitive-logs th a,
+    .sensitive-logs thead tr th a,
+    .sensitive-logs th a {
+      color: #ffffff !important;
+      font-weight: bold !important;
+    }
+    
+    .sensitive-logs tbody tr td,
+    .sensitive-logs td {
+      color: #000000 !important;
+      background: #ffffff !important;
+    }
+    
+    /* 篩選區域樣式 */
+    .filters fieldset {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    
+    .filters fieldset legend {
+      background: #f8f9fa;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #495057;
+    }
+    
+    .filters fieldset legend:hover {
+      background: #e9ecef;
+    }
+    
+    .filters .splitcontent {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .filters .splitcontentleft,
+    .filters .splitcontentright {
+      flex: 1;
+    }
+    
+    .filters .field {
+      margin-bottom: 12px;
+    }
+    
+    .filters .field label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+      color: #495057;
+    }
+    
+    .filters .field input,
+    .filters .field select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .filters .field input:focus,
+    .filters .field select:focus {
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    /* 快速篩選按鈕樣式 */
+    .quick-filters {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      margin-bottom: 15px;
+    }
+    
+    .quick-filters .label {
+      font-weight: 500;
+      color: #495057;
+      margin-right: 10px;
+    }
+    
+    .quick-filters .button {
+      margin-right: 8px;
+      margin-bottom: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .quick-filters .button:hover {
+      background: #0056b3;
+      color: white;
+      text-decoration: none;
+    }
+    
+    /* 統計區域樣式 */
+    .statistics {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .statistic-item {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 10px 15px;
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .statistic-item .label {
+      display: block;
+      font-size: 12px;
+      color: #6c757d;
+      margin-bottom: 4px;
+    }
+    
+    .statistic-item .value {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      color: #495057;
+    }
+    
+    .statistic-item.high-risk .value {
+      color: #dc3545;
+    }
+    
+    .statistic-item.medium-risk .value {
+      color: #fd7e14;
+    }
+    
+    .statistic-item.low-risk .value {
+      color: #28a745;
+    }
+  </style>
+<% end %>
+
+<div class="contextual">
+  <%= link_to l(:label_new), new_sensitive_log_path, class: 'icon icon-add' if User.current.allowed_to?(:manage_sensitive_rules, @project) %>
+  <%= link_to l(:button_export), sensitive_logs_path(format: 'csv', project_id: @project), class: 'icon icon-download' %>
+  <%= link_to l(:button_cleanup), cleanup_sensitive_logs_path, method: :post, 
+      data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-delete' if User.current.admin? %>
+</div>
+
+<h2><%= l(:label_sensitive_logs) %></h2>
+
+<div class="statistics">
+  <div class="statistic-item">
+    <span class="label"><%= l(:label_total) %>:</span>
+    <span class="value"><%= @statistics[:total_count] %></span>
+  </div>
+  <div class="statistic-item high-risk">
+    <span class="label"><%= l(:label_high_risk) %>:</span>
+    <span class="value"><%= @statistics[:high_risk_count] %></span>
+  </div>
+  <div class="statistic-item medium-risk">
+    <span class="label"><%= l(:label_medium_risk) %>:</span>
+    <span class="value"><%= @statistics[:medium_risk_count] %></span>
+  </div>
+  <div class="statistic-item low-risk">
+    <span class="label"><%= l(:label_low_risk) %>:</span>
+    <span class="value"><%= @statistics[:low_risk_count] %></span>
+  </div>
+</div>
+
+<%= form_tag sensitive_logs_path, method: :get, class: 'filters' do %>
+  <%= hidden_field_tag :project_id, @project.id if @project %>
+  
+  <fieldset class="collapsible collapsed">
+    <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+    <div style="display: none;">
+      <div class="splitcontent">
+        <div class="splitcontentleft">
+          <div class="field">
+            <%= label_tag :user_id, l(:field_user) %>
+            <%= select_tag :user_id, options_from_collection_for_select(User.active, :id, :name, params[:user_id]), 
+                prompt: l(:label_all), class: 'select2' %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :project_id, l(:field_project) %>
+            <%= select_tag :project_id, options_from_collection_for_select(Project.visible, :id, :name, params[:project_id]), 
+                prompt: l(:label_all), class: 'select2' %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :risk_level, l(:field_risk_level) %>
+            <%= select_tag :risk_level, options_for_select([
+              [l(:label_all), ''],
+              [l(:label_high_risk), 'high'],
+              [l(:label_medium_risk), 'medium'],
+              [l(:label_low_risk), 'low']
+            ], params[:risk_level]) %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :operation_type, l(:field_operation_type) %>
+            <%= select_tag :operation_type, options_for_select([
+              [l(:label_all), ''],
+              [l(:label_detection), 'detection'],
+              [l(:label_blocked), 'blocked_submission'],
+              [l(:label_warning), 'warning'],
+              [l(:label_override), 'override']
+            ], params[:operation_type]) %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :content_type, l(:field_content_type) %>
+            <%= select_tag :content_type, options_for_select([
+              [l(:label_all), ''],
+              [l(:label_issue_description), 'issue_description'],
+              [l(:label_issue_note), 'issue_note'],
+              [l(:label_wiki_page), 'wiki_page'],
+              [l(:label_document), 'document'],
+              [l(:label_file_attachment), 'file_attachment'],
+              [l(:label_message), 'message']
+            ], params[:content_type]) %>
+          </div>
+        </div>
+        
+        <div class="splitcontentright">
+          <div class="field">
+            <%= label_tag :file_type, l(:field_file_type) %>
+            <%= select_tag :file_type, options_for_select([
+              [l(:label_all), ''],
+              [l(:label_text_file), 'txt'],
+              [l(:label_csv_file), 'csv'],
+              [l(:label_word_document), 'doc'],
+              [l(:label_excel_document), 'xls'],
+              [l(:label_pdf_document), 'pdf'],
+              [l(:label_unknown_file_type), 'unknown']
+            ], params[:file_type]) %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :ip_address, l(:field_ip_address) %>
+            <%= text_field_tag :ip_address, params[:ip_address], placeholder: '例如: 192.168.1.1' %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :keyword, l(:label_keyword_search) %>
+            <%= text_field_tag :keyword, params[:keyword], placeholder: l(:text_keyword_search_placeholder) %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :file_size_min, l(:label_file_size_min) %>
+            <%= number_field_tag :file_size_min, params[:file_size_min], min: 0, placeholder: 'KB' %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :file_size_max, l(:label_file_size_max) %>
+            <%= number_field_tag :file_size_max, params[:file_size_max], min: 0, placeholder: 'KB' %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :start_date, l(:field_start_date) %>
+            <%= date_field_tag :start_date, params[:start_date] %>
+          </div>
+          
+          <div class="field">
+            <%= label_tag :end_date, l(:field_end_date) %>
+            <%= date_field_tag :end_date, params[:end_date] %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="buttons">
+        <%= submit_tag l(:button_apply), class: 'button-positive' %>
+        <%= link_to l(:button_clear), sensitive_logs_path(project_id: @project), class: 'button' %>
+        <%= link_to l(:button_quick_filters), '#', class: 'button', onclick: 'showQuickFilters(); return false;' %>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<!-- 快速篩選按鈕 -->
+<div class="quick-filters" style="margin: 10px 0;">
+  <span class="label"><%= l(:label_quick_filters) %>:</span>
+  <%= link_to l(:label_today), sensitive_logs_path(project_id: @project, start_date: Date.current, end_date: Date.current), class: 'button' %>
+  <%= link_to l(:label_this_week), sensitive_logs_path(project_id: @project, start_date: Date.current.beginning_of_week, end_date: Date.current.end_of_week), class: 'button' %>
+  <%= link_to l(:label_this_month), sensitive_logs_path(project_id: @project, start_date: Date.current.beginning_of_month, end_date: Date.current.end_of_month), class: 'button' %>
+  <%= link_to l(:label_high_risk), sensitive_logs_path(project_id: @project, risk_level: 'high'), class: 'button' %>
+  <%= link_to l(:label_blocked), sensitive_logs_path(project_id: @project, operation_type: 'blocked_submission'), class: 'button' %>
+</div>
+
+<% if @logs.any? %>
+  <div class="autoscroll">
+    <table class="list sensitive-logs">
+      <thead>
+        <tr>
+          <th><%= l(:field_id) %></th>
+          <th><%= l(:field_user) %></th>
+          <th><%= l(:field_project) %></th>
+          <th><%= l(:field_operation_type) %></th>
+          <th><%= l(:field_content_type) %></th>
+          <th><%= l(:field_risk_level) %></th>
+          <th><%= l(:field_ip_address) %></th>
+          <th><%= l(:field_created_on) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @logs.each do |log| %>
+          <tr class="<%= cycle('odd', 'even') %> risk-<%= log.risk_level %>">
+            <td><%= log.id %></td>
+            <td><%= link_to_user log.user %></td>
+            <td><%= link_to_project log.project if log.project %></td>
+            <td><%= log.operation_type_display %></td>
+            <td><%= log.content_type_display %></td>
+            <td>
+              <span class="risk-badge risk-<%= log.risk_level %>">
+                <%= log.risk_level_display %>
+              </span>
+            </td>
+            <td><%= log.ip_address %></td>
+            <td><%= format_time(log.created_at) %></td>
+            <td class="buttons">
+              <%= link_to l(:button_view), sensitive_log_path(log), class: 'icon icon-view' %>
+              <% if User.current.admin? %>
+                <%= link_to l(:button_delete), sensitive_log_path(log), method: :delete, 
+                    data: { confirm: l(:text_are_you_sure) }, class: 'icon icon-del' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- 分頁功能暫時移除 -->
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+
+<script>
+// 篩選區域展開/收合功能
+function toggleFieldset(legend) {
+  var fieldset = legend.parentNode;
+  var content = fieldset.querySelector('div');
+  var isCollapsed = content.style.display === 'none';
+  
+  if (isCollapsed) {
+    content.style.display = 'block';
+    fieldset.classList.remove('collapsed');
+  } else {
+    content.style.display = 'none';
+    fieldset.classList.add('collapsed');
+  }
+}
+
+// 快速篩選功能
+function showQuickFilters() {
+  // 顯示快速篩選說明
+  alert('快速篩選功能：\n\n' +
+        '• 今日：顯示今天的記錄\n' +
+        '• 本週：顯示本週的記錄\n' +
+        '• 本月：顯示本月的記錄\n' +
+        '• 高風險：顯示高風險記錄\n' +
+        '• 阻擋：顯示被阻擋的記錄\n\n' +
+        '您也可以點擊上方的快速篩選按鈕來快速篩選資料。');
+}
+
+// 頁面載入時初始化
+document.addEventListener('DOMContentLoaded', function() {
+  // 自動展開篩選區域（如果有篩選條件）
+  var hasFilters = false;
+  var filterInputs = document.querySelectorAll('.filters input, .filters select');
+  
+  filterInputs.forEach(function(input) {
+    if (input.value && input.value !== '') {
+      hasFilters = true;
+    }
+  });
+  
+  if (hasFilters) {
+    var fieldset = document.querySelector('.filters fieldset');
+    var content = fieldset.querySelector('div');
+    content.style.display = 'block';
+    fieldset.classList.remove('collapsed');
+  }
+  
+  // 為快速篩選按鈕添加點擊效果
+  var quickFilterButtons = document.querySelectorAll('.quick-filters .button');
+  quickFilterButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      // 添加點擊效果
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 150);
+    });
+  });
+});
+</script>

@@ -1,90 +1,316 @@
 zh-TW:
   label_sensitive_data_guard: "敏感資料防護"
   label_sensitive_logs: "敏感操作日誌"
-  label_detection_rules: "偵測規則"
-  label_sensitive_operations: "敏感操作"
+  label_sensitive_log: "敏感操作日誌"
+  label_performance_monitoring: "效能監控"
   
-  # 錯誤訊息
-  error_id_card_detected: "偵測到身分證號碼，請移除或使用替代識別碼"
-  error_credit_card_detected: "偵測到信用卡號碼，請移除或使用遮蔽格式"
-  error_api_key_detected: "偵測到API金鑰，請移除或使用環境變數"
-  error_credential_detected: "偵測到帳號密碼資訊，請移除或使用安全配置"
-  error_phone_detected: "偵測到手機號碼，請移除或使用替代聯絡方式"
-  error_email_detected: "偵測到Email地址，請確認其必要性"
-  error_ip_address_detected: "偵測到IP位址，請確認其必要性"
-  error_password_detected: "偵測到密碼資訊，請移除或使用安全配置"
-  error_sensitive_data_detected: "偵測到敏感資訊，請檢查內容"
-  
-  # 操作類型
-  operation_type_blocked_submission: "阻擋提交"
-  operation_type_warning: "警告"
-  operation_type_override: "覆蓋提交"
-  
-  # 內容類型
-  content_type_issue: "問題"
-  content_type_wiki: "Wiki頁面"
-  content_type_project: "專案"
-  content_type_attachment: "附件"
-  
-  # 風險等級
-  risk_level_high: "高風險"
-  risk_level_medium: "中風險"
-  risk_level_low: "低風險"
-  
-  # 表單標籤
-  field_user: "使用者"
+  # 欄位標籤
+  field_id: "ID"
+  field_user: "用戶"
   field_project: "專案"
+  field_created_on: "建立日期"
+  field_risk_level: "風險等級"
   field_operation_type: "操作類型"
   field_content_type: "內容類型"
-  field_risk_level: "風險等級"
-  field_ip_address: "IP位址"
-  field_created_at: "建立時間"
-  field_content_preview: "內容預覽"
   field_detected_patterns: "偵測到的模式"
+  field_content_preview: "內容預覽"
+  field_override_reason: "覆蓋原因"
+  field_file_type: "檔案類型"
+  field_file_size: "檔案大小"
+  field_ip_address: "IP 位址"
+  field_user_agent: "使用者代理"
+  field_start_date: "開始日期"
+  field_end_date: "結束日期"
   
-  # 按鈕
-  button_cleanup: "清理過期日誌"
-  button_export_csv: "匯出CSV"
-  button_show_details: "查看詳情"
-  button_delete: "刪除"
+  # 風險等級
+  label_high_risk: "高風險"
+  label_medium_risk: "中風險"
+  label_low_risk: "低風險"
   
-  # 訊息
-  notice_cleanup_completed: "過期日誌清理完成"
-  notice_log_deleted: "日誌已刪除"
-  error_failed_to_delete: "刪除失敗"
+  # 操作類型
+  label_detection: "偵測"
+  label_blocked: "阻擋"
+  label_warning: "警告"
+  label_override: "覆蓋"
   
-  # 統計
-  label_total_count: "總計"
-  label_high_risk_count: "高風險"
-  label_medium_risk_count: "中風險"
-  label_low_risk_count: "低風險"
-  label_blocked_count: "阻擋"
-  label_warning_count: "警告"
-  label_override_count: "覆蓋"
+  # 內容類型
+  label_issue_description: "問題描述"
+  label_issue_note: "問題備註"
+  label_wiki_page: "Wiki 頁面"
+  label_document: "文件"
+  label_file_attachment: "檔案附件"
+  label_message: "討論區訊息"
+  label_attachment: "附件"
   
-  # 篩選
-  label_filter: "篩選"
-  label_filter_by_user: "按使用者篩選"
-  label_filter_by_project: "按專案篩選"
-  label_filter_by_risk_level: "按風險等級篩選"
-  label_filter_by_operation_type: "按操作類型篩選"
-  label_filter_by_date_range: "按日期範圍篩選"
-  
-  # 設定
-  label_plugin_settings: "插件設定"
+  # 設定標籤
   label_enable_plugin: "啟用插件"
   label_enable_file_scanning: "啟用檔案掃描"
   label_max_file_size_mb: "最大檔案大小 (MB)"
-  label_enable_email_notifications: "啟用Email通知"
-  label_enable_slack_notifications: "啟用Slack通知"
+  label_enable_email_notifications: "啟用 Email 通知"
+  label_enable_slack_notifications: "Slack Webhook URL"
   label_retention_days_high_risk: "高風險記錄保留天數"
   label_retention_days_standard: "一般記錄保留天數"
   label_retention_days_override: "覆蓋記錄保留天數"
   label_auto_cleanup_enabled: "啟用自動清理"
+  label_enable_high_risk_detection: "啟用高風險偵測"
+  label_high_risk_strategy: "高風險處理策略"
+  label_enable_medium_risk_detection: "啟用中風險偵測"
+  label_medium_risk_strategy: "中風險處理策略"
+  label_enable_low_risk_detection: "啟用低風險偵測"
+  label_low_risk_strategy: "低風險處理策略"
   
-  # 說明
+  # 個別項目設定
+  label_enable_credential_combination_detection: "啟用帳號密碼組合偵測"
+  label_enable_taiwan_id_detection: "啟用台灣身分證號碼偵測"
+  label_enable_credit_card_detection: "啟用信用卡號碼偵測"
+  label_enable_password_keyword_detection: "啟用密碼關鍵字偵測"
+  label_enable_database_connection_detection: "啟用資料庫連線字串偵測"
+  label_enable_taiwan_mobile_detection: "啟用台灣手機號碼偵測"
+  label_enable_internal_ip_detection: "啟用內部 IP 位址偵測"
+  label_enable_email_detection: "啟用 Email 地址偵測"
+  
+  # 按鈕
+  button_export: "匯出"
+  button_cleanup: "清理"
+  button_apply: "套用"
+  button_clear: "清除"
+  button_back: "返回"
+  button_view: "檢視"
+  button_delete: "刪除"
+  
+  # 訊息
+  text_are_you_sure: "確定要執行此操作嗎？"
+  label_no_data: "沒有資料"
+  label_all: "全部"
+  label_total: "總計"
+  
+  # 幫助文字
   help_enable_plugin: "啟用敏感資料防護功能"
-  help_enable_file_scanning: "掃描上傳的Office文件內容"
-  help_max_file_size_mb: "允許上傳的最大檔案大小"
-  help_retention_days: "日誌記錄的保留天數"
-  help_auto_cleanup: "自動清理過期的日誌記錄" 
+  help_enable_file_scanning: "掃描上傳的檔案內容"
+  help_max_file_size_mb: "超過此大小的檔案將不會被掃描"
+  help_retention_days: "設定日誌保留期限，超過期限的日誌將被自動清理"
+  help_auto_cleanup: "定期自動清理過期的日誌記錄"
+  
+  # 錯誤訊息
+  error_sensitive_data_detected: "檢測到敏感資料，提交被阻擋"
+  error_failed_to_log: "記錄敏感操作失敗"
+  error_failed_to_delete: "刪除失敗"
+  error_attachment_scan_failed: "檔案掃描失敗"
+  error_review_failed: "審核失敗"
+  error_review_not_allowed: "此記錄無法審核"
+  error_no_logs_selected: "請選擇要操作的記錄"
+  error_invalid_date_format: "日期格式無效"
+  error_cleanup_failed: "清理失敗：%{error}"
+  
+  # 通知設定相關
+  label_notification_settings: "通知設定"
+  label_notification_setting_new: "新增通知設定"
+  label_notification_setting_edit: "編輯通知設定"
+  label_notification_type: "通知類型"
+  label_trigger_condition: "觸發條件"
+  label_frequency: "頻率"
+  label_recipients: "收件人"
+  label_status: "狀態"
+  label_actions: "操作"
+  label_enabled: "已啟用"
+  label_disabled: "已停用"
+  label_create_defaults: "建立預設設定"
+  label_test_notification: "測試通知"
+  label_send_summary: "發送摘要"
+  label_recent_notifications: "最近通知"
+  label_type: "類型"
+  label_subject: "主旨"
+  label_created_at: "建立時間"
+  label_clear_history: "清除歷史記錄"
+  label_no_notification_settings: "沒有通知設定"
+  label_no_notification_history: "沒有通知歷史"
+  label_create_notification_setting: "建立通知設定"
+  label_edit_notification_setting: "編輯通知設定"
+  label_basic_settings: "基本設定"
+  label_recipient_settings: "收件人設定"
+  label_status_settings: "狀態設定"
+  label_period: "期間"
+  label_today: "今日"
+  label_this_week: "本週"
+  label_this_month: "本月"
+  label_sent: "已發送"
+  label_pending: "等待中"
+  label_failed: "失敗"
+  label_email: "Email"
+  label_immediate: "立即"
+  label_hourly: "每小時"
+  label_daily: "每日"
+  label_weekly: "每週"
+  label_back_to_list: "返回列表"
+  
+  # 風險等級標籤
+  label_high_risk: "高風險"
+  label_medium_risk: "中風險"
+  label_low_risk: "低風險"
+  label_unknown_risk: "未知風險"
+  
+  # 操作類型標籤
+  label_issue_creation: "問題建立"
+  label_issue_update: "問題更新"
+  label_wiki_edit: "Wiki 編輯"
+  label_message_post: "訊息發布"
+  label_attachment_upload: "附件上傳"
+  label_blocked_submission: "阻擋提交"
+  label_warning: "警告"
+  label_override: "覆蓋"
+  
+  # 內容類型標籤
+  label_issue_description: "問題描述"
+  label_issue_notes: "問題備註"
+  label_wiki_content: "Wiki 內容"
+  label_message_content: "訊息內容"
+  label_attachment: "附件"
+  
+  # 審核狀態標籤
+  label_pending_review: "待審核"
+  label_approved: "已核准"
+  label_rejected: "已拒絕"
+  label_allow: "允許"
+  label_block: "阻擋"
+  
+  # 通知訊息
+  notice_notification_setting_created: "通知設定已建立"
+  notice_notification_setting_updated: "通知設定已更新"
+  notice_notification_setting_deleted: "通知設定已刪除"
+  notice_notification_setting_toggled: "通知設定已%{status}"
+  notice_default_notification_settings_created: "預設通知設定已建立"
+  notice_test_notification_sent: "測試通知已發送"
+  notice_summary_notification_sent: "摘要通知已發送"
+  notice_notification_history_cleared: "已清除 %{count} 條歷史記錄（%{days} 天前）"
+  
+  # 錯誤訊息
+  error_recipients_required: "收件人為必填欄位"
+  error_summary_notification_failed: "發送摘要失敗：%{error}"
+  error_notification_setting_save_failed: "通知設定儲存失敗"
+  
+  # 幫助文字
+  text_notification_type_help: "選擇通知的發送方式"
+  text_trigger_condition_help: "選擇觸發通知的風險等級條件"
+  text_frequency_help: "選擇通知的發送頻率"
+  text_recipients_help: "輸入收件人的 Email 地址，多個地址請用逗號分隔"
+  text_description_help: "描述此通知設定的用途"
+  text_enabled_help: "啟用或停用此通知設定"
+  text_no_notification_settings_description: "目前沒有設定任何通知規則。您可以建立預設設定或手動新增通知設定。"
+  text_no_notification_history_description: "目前沒有通知歷史記錄。當有敏感資料被偵測時，通知記錄會顯示在這裡。"
+  text_create_notification_setting_description: "建立新的通知設定來管理敏感資料偵測的警報"
+  text_edit_notification_setting_description: "修改現有的通知設定"
+  text_clear_history_confirmation: "確定要清除 %{days} 天前的通知歷史記錄嗎？此操作無法復原。"
+  
+  # 成功訊息
+  notice_successful_delete: "刪除成功"
+  notice_cleanup_completed: "清理完成，共清理 %{count} 筆記錄"
+  notice_review_approved: "已核准此記錄"
+  notice_review_rejected: "已拒絕此記錄"
+  notice_bulk_review_approved: "已核准 %{count} 筆記錄"
+  notice_bulk_review_rejected: "已拒絕 %{count} 筆記錄"
+  
+  # 通知訊息
+  text_sensitive_data_warning: "敏感資料防護提醒"
+  text_sensitive_data_description: "系統會自動偵測並阻擋包含敏感資料的內容，包括："
+  text_sensitive_data_items: "身分證號碼、信用卡號碼、密碼、API 金鑰等敏感資訊、內部網路位址"
+  text_attachment_scanning_warning: "檔案掃描提醒"
+  text_attachment_scanning_description: "上傳的檔案將自動進行敏感資料掃描："
+  text_supported_file_types: "支援的檔案類型：TXT, CSV, DOC, XLS, PDF 等"
+  text_file_size_limit: "檔案大小限制"
+  text_attachment_blocked: "包含敏感資料的檔案將被阻擋"
+  
+  # 檔案掃描相關
+  label_file_scanning: "檔案掃描"
+  label_supported_extensions: "支援的檔案類型"
+  label_scan_result: "掃描結果"
+  label_file_safe: "檔案安全"
+  label_file_unsafe: "檔案不安全"
+  label_scanning_in_progress: "掃描中..."
+  label_scan_completed: "掃描完成"
+  label_scan_failed: "掃描失敗"
+  
+  # 處理策略
+  label_strategy_block: "立即阻擋"
+  label_strategy_warn: "警告"
+  label_strategy_log: "記錄"
+  
+  # 檔案類型
+  label_text_file: "文字檔案"
+  label_csv_file: "CSV 檔案"
+  label_word_document: "Word 文件"
+  label_excel_document: "Excel 文件"
+  label_pdf_document: "PDF 文件"
+  label_unknown_file_type: "未知檔案類型"
+  
+  # 其他標籤
+  label_description: "描述"
+  label_filter_plural: "篩選條件"
+  label_quick_filters: "快速篩選"
+  label_keyword_search: "關鍵字搜尋"
+  label_file_size_min: "檔案大小最小值"
+  label_file_size_max: "檔案大小最大值"
+  
+  # 幫助文字
+  text_keyword_search_placeholder: "搜尋內容預覽、偵測模式或覆蓋原因"
+  
+  # 按鈕
+  button_quick_filters: "快速篩選"
+  
+  # 通知管理相關
+  label_notification_management: "通知管理"
+  label_notification_logs: "通知日誌"
+  label_export_logs: "匯出日誌"
+  label_email_notification: "Email 通知"
+  label_system_notification: "系統通知" 
+  
+  # 審核相關
+  label_reviews: "審核管理"
+  label_review: "審核"
+  label_review_plural: "審核"
+  label_pending_review: "待審核"
+  label_approved: "已核准"
+  label_rejected: "已拒絕"
+  label_review_status: "審核狀態"
+  label_reviewer: "審核者"
+  label_reviewed_at: "審核時間"
+  label_review_comment: "審核意見"
+  label_review_decision: "審核決定"
+  label_requires_review: "需要審核"
+  label_can_be_reviewed: "可審核"
+  label_reviewed: "已審核"
+  
+  # 審核決定
+  label_allow: "允許"
+  label_block: "阻擋"
+  label_warn: "警告"
+  label_modify: "修改"
+  label_escalate: "升級"
+  
+  # 審核操作
+  label_approve: "核准"
+  label_reject: "拒絕"
+  label_bulk_approve: "批量核准"
+  label_bulk_reject: "批量拒絕"
+  label_review_statistics: "審核統計"
+  
+  # 審核頁面
+  label_review_management: "敏感資料審核管理"
+  label_review_details: "敏感資料記錄詳情"
+  label_review_actions: "審核操作"
+  label_approve_action: "核准操作"
+  label_reject_action: "拒絕操作"
+  label_approve_decision: "核准決定"
+  label_reject_decision: "拒絕決定"
+  label_approve_comment: "審核意見"
+  label_reject_reason: "拒絕原因"
+  
+  # 審核統計
+  label_total_pending: "待審核"
+  label_total_approved: "已核准"
+  label_total_rejected: "已拒絕"
+  label_review_rate: "審核率"
+  
+  # 審核通知
+  label_review_notification: "審核通知"
+  label_review_approved: "審核核准"
+  label_review_rejected: "審核拒絕" 

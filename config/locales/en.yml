@@ -1,0 +1,211 @@
+en:
+  sensitive_data_guard:
+    # 通用
+    plugin_name: "Sensitive Data Guard"
+    plugin_description: "Sensitive data detection and audit logging plugin for Redmine"
+    
+    # 選單項目
+    label_sensitive_logs: "Sensitive Logs"
+    label_reviews: "Reviews"
+    label_performance_monitoring: "Performance Monitoring"
+    
+    # 風險等級
+    risk_level:
+      high: "High Risk"
+      medium: "Medium Risk"
+      low: "Low Risk"
+      unknown: "Unknown Risk"
+    
+    # 操作類型
+    operation_type:
+      blocked_submission: "Blocked Submission"
+      warning: "Warning"
+      override: "Override"
+      file_upload: "File Upload"
+    
+    # 內容類型
+    content_type:
+      issue_description: "Issue Description"
+      issue_notes: "Issue Notes"
+      wiki_content: "Wiki Content"
+      message_content: "Message Content"
+      attachment: "Attachment"
+    
+    # 偵測模式
+    detection_patterns:
+      taiwan_id: "Taiwan ID Number"
+      credit_card: "Credit Card Number"
+      taiwan_mobile: "Taiwan Mobile Number"
+      password_keywords: "Password Keywords"
+      username_password: "Username/Password Combination"
+      email: "Email Address"
+      internal_ip: "Internal IP Address"
+      database_connection: "Database Connection String"
+    
+    # 設定頁面
+    settings:
+      title: "Sensitive Data Guard Settings"
+      basic_settings: "Basic Settings"
+      risk_level_settings: "Risk Level Settings"
+      notification_settings: "Notification Settings"
+      retention_settings: "Retention Settings"
+      performance_settings: "Performance Settings"
+      
+      # 基本設定
+      enabled: "Enable sensitive data protection"
+      scan_office_documents: "Enable file scanning"
+      max_file_size_mb: "Maximum file size (MB)"
+      
+      # 風險等級設定
+      enable_high_risk_detection: "Enable high risk detection"
+      enable_medium_risk_detection: "Enable medium risk detection"
+      enable_low_risk_detection: "Enable low risk detection"
+      
+      # 處理策略
+      high_risk_strategy: "High risk strategy"
+      medium_risk_strategy: "Medium risk strategy"
+      low_risk_strategy: "Low risk strategy"
+      
+      strategy_options:
+        block: "Block"
+        warn: "Warn"
+        log: "Log only"
+    
+    # 日誌頁面
+    logs:
+      title: "Sensitive Operation Logs"
+      no_logs: "No logs found"
+      filters: "Filters"
+      export: "Export"
+      cleanup: "Cleanup"
+      
+      # 篩選選項
+      filter_by_risk_level: "Filter by risk level"
+      filter_by_operation_type: "Filter by operation type"
+      filter_by_date_range: "Filter by date range"
+      filter_by_user: "Filter by user"
+      filter_by_project: "Filter by project"
+      
+      # 表格標題
+      table:
+        id: "ID"
+        user: "User"
+        project: "Project"
+        operation_type: "Operation Type"
+        content_type: "Content Type"
+        risk_level: "Risk Level"
+        detected_patterns: "Detected Patterns"
+        content_preview: "Content Preview"
+        created_at: "Created At"
+        actions: "Actions"
+    
+    # 通知設定
+    notifications:
+      title: "Notification Settings"
+      email_notifications: "Email notifications"
+      slack_notifications: "Slack notifications"
+      notification_recipients: "Notification recipients"
+      notification_frequency: "Notification frequency"
+      
+      frequency_options:
+        immediate: "Immediate"
+        daily: "Daily"
+        weekly: "Weekly"
+        monthly: "Monthly"
+    
+    # 效能監控
+    performance:
+      title: "Performance Monitoring"
+      realtime_metrics: "Realtime Metrics"
+      system_health: "System Health"
+      performance_report: "Performance Report"
+      
+      metrics:
+        processing_time: "Processing Time"
+        detection_rate: "Detection Rate"
+        error_rate: "Error Rate"
+        cache_hit_rate: "Cache Hit Rate"
+    
+    # 錯誤訊息
+    errors:
+      authentication_required: "Authentication required"
+      permission_denied: "Permission denied"
+      validation_error: "Validation error"
+      resource_not_found: "Resource not found"
+      internal_error: "Internal error"
+      
+      # 偵測錯誤
+      detection_failed: "Detection failed"
+      file_scan_failed: "File scan failed"
+      file_too_large: "File too large"
+      unsupported_file_type: "Unsupported file type"
+      corrupted_file: "Corrupted file"
+    
+    # 成功訊息
+    success:
+      settings_updated: "Settings updated successfully"
+      log_created: "Log created successfully"
+      notification_sent: "Notification sent successfully"
+      cleanup_completed: "Cleanup completed successfully"
+    
+    # 警告訊息
+    warnings:
+      sensitive_data_detected: "Sensitive data detected"
+      file_contains_sensitive_data: "File contains sensitive data"
+      override_required: "Override required"
+    
+    # 按鈕和連結
+    buttons:
+      save: "Save"
+      cancel: "Cancel"
+      delete: "Delete"
+      edit: "Edit"
+      view: "View"
+      export: "Export"
+      import: "Import"
+      test: "Test"
+      approve: "Approve"
+      reject: "Reject"
+      override: "Override"
+    
+    # 分頁
+    pagination:
+      previous: "Previous"
+      next: "Next"
+      showing: "Showing"
+      of: "of"
+      entries: "entries"
+    
+    # 日期和時間
+    date:
+      today: "Today"
+      yesterday: "Yesterday"
+      this_week: "This Week"
+      this_month: "This Month"
+      last_month: "Last Month"
+      custom_range: "Custom Range"
+    
+    # 統計
+    statistics:
+      total_operations: "Total Operations"
+      high_risk_count: "High Risk Count"
+      medium_risk_count: "Medium Risk Count"
+      low_risk_count: "Low Risk Count"
+      blocked_count: "Blocked Count"
+      warning_count: "Warning Count"
+      override_count: "Override Count"
+    
+    # 工具提示
+    tooltips:
+      risk_level_high: "High risk content detected"
+      risk_level_medium: "Medium risk content detected"
+      risk_level_low: "Low risk content detected"
+      override_permission: "You have override permission"
+      no_override_permission: "You don't have override permission"
+    
+    # 幫助文字
+    help:
+      risk_levels: "Risk levels indicate the severity of detected sensitive data"
+      detection_patterns: "Detection patterns are rules used to identify sensitive data"
+      retention_policy: "Retention policy determines how long logs are kept"
+      notification_settings: "Notification settings control when and how alerts are sent"

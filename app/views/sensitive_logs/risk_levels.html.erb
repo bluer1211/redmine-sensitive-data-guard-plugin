@@ -1,0 +1,213 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'sensitive_data_guard', plugin: 'redmine_sensitive_data_guard' %>
+<% end %>
+
+<div class="contextual">
+  <%= link_to l(:button_back), sensitive_logs_path, class: 'icon icon-back' %>
+</div>
+
+<h2>📋 敏感資料風險等級清單</h2>
+
+<div class="risk-levels-guide">
+  <div class="risk-level high">
+    <h3>🟠 高風險 (High Risk)</h3>
+    <div class="risk-description">
+      <p>這些是高度敏感的個人或財務資訊，可能導致身份盜竊或財務損失。</p>
+    </div>
+    
+    <div class="risk-items">
+      <h4>偵測項目：</h4>
+      <ul>
+        <li>
+          <strong>台灣身分證號碼</strong>
+          <p>偵測 A123456789 格式的台灣身分證號碼</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>A123456789</li>
+              <li>B987654321</li>
+              <li>C123456789</li>
+            </ul>
+          </div>
+        </li>
+        
+        <li>
+          <strong>信用卡號碼</strong>
+          <p>偵測 16 位數的信用卡號碼（支援多種格式）</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>1234-5678-9012-3456</li>
+              <li>1234567890123456</li>
+              <li>1234 5678 9012 3456</li>
+            </ul>
+          </div>
+        </li>
+        
+        <li>
+          <strong>密碼或金鑰關鍵字</strong>
+          <p>偵測包含 password、API_KEY 等關鍵字的內容</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>password: mysecret123</li>
+              <li>API_KEY=abc123def456</li>
+              <li>secret: confidential</li>
+            </ul>
+          </div>
+        </li>
+        
+        <li>
+          <strong>資料庫連線字串</strong>
+          <p>偵測包含資料庫連線資訊的字串</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>mysql://user:password@localhost:3306/db</li>
+              <li>postgresql://user:pass@host:5432/db</li>
+              <li>mongodb://user:pass@host:27017/db</li>
+            </ul>
+          </div>
+        </li>
+        
+        <li>
+          <strong>帳號密碼組合</strong>
+          <p>偵測 username:password 或 user=xxx&password=xxx 格式的內容</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>username=admin&password=123456</li>
+              <li>user: admin, password: secret123</li>
+              <li>login: admin, pwd: mypassword</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="handling-strategy">
+      <h4>處理策略：</h4>
+      <ul>
+        <li><strong>預設動作：</strong>阻擋提交</li>
+        <li><strong>權限要求：</strong>覆蓋權限才能提交</li>
+        <li><strong>日誌記錄：</strong>記錄所有偵測事件</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="risk-level medium">
+    <h3>🟡 中風險 (Medium Risk)</h3>
+    <div class="risk-description">
+      <p>這些是中等敏感度的資訊，可能涉及隱私但風險相對較低。</p>
+    </div>
+    
+    <div class="risk-items">
+      <h4>偵測項目：</h4>
+      <ul>
+        <li>
+          <strong>台灣手機號碼</strong>
+          <p>偵測 09 開頭的 10 位數台灣手機號碼</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>0912345678</li>
+              <li>0987654321</li>
+              <li>0923456789</li>
+            </ul>
+          </div>
+        </li>
+        
+        <li>
+          <strong>內部 IP 位址</strong>
+          <p>偵測私有網路 IP 位址</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>192.168.1.100</li>
+              <li>10.0.0.1</li>
+              <li>172.16.1.1</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="handling-strategy">
+      <h4>處理策略：</h4>
+      <ul>
+        <li><strong>預設動作：</strong>警告提示</li>
+        <li><strong>權限要求：</strong>一般權限即可提交</li>
+        <li><strong>日誌記錄：</strong>記錄偵測事件</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="risk-level low">
+    <h3>🟢 低風險 (Low Risk)</h3>
+    <div class="risk-description">
+      <p>這些是低敏感度的資訊，主要用於記錄和監控目的。</p>
+    </div>
+    
+    <div class="risk-items">
+      <h4>偵測項目：</h4>
+      <ul>
+        <li>
+          <strong>Email 地址</strong>
+          <p>偵測標準 Email 格式</p>
+          <div class="example">
+            <strong>範例：</strong>
+            <ul>
+              <li>user@example.com</li>
+              <li>test.email@domain.org</li>
+              <li>admin@company.com.tw</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="handling-strategy">
+      <h4>處理策略：</h4>
+      <ul>
+        <li><strong>預設動作：</strong>僅記錄</li>
+        <li><strong>權限要求：</strong>一般權限即可提交</li>
+        <li><strong>日誌記錄：</strong>記錄偵測事件</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="best-practices">
+  <h3>💡 最佳實踐建議</h3>
+  
+  <div class="practice-item">
+    <h4>1. 定期檢視設定</h4>
+    <p>根據組織需求定期調整風險等級設定和處理策略。</p>
+  </div>
+  
+  <div class="practice-item">
+    <h4>2. 監控日誌</h4>
+    <p>定期檢查敏感操作日誌，識別潛在的安全風險模式。</p>
+  </div>
+  
+  <div class="practice-item">
+    <h4>3. 員工教育</h4>
+    <p>教育員工了解敏感資料的重要性，避免在系統中輸入敏感資訊。</p>
+  </div>
+  
+  <div class="practice-item">
+    <h4>4. 定期清理</h4>
+    <p>定期清理過期的日誌記錄，確保系統效能和隱私保護。</p>
+  </div>
+</div>
+
+<div class="customization">
+  <h3>🔧 自定義規則</h3>
+  <p>您可以根據組織需求自定義偵測規則：</p>
+  <ul>
+    <li>在設定頁面中調整各風險等級的啟用狀態</li>
+    <li>修改處理策略（阻擋/警告/記錄）</li>
+    <li>設定日誌保留期限</li>
+    <li>配置通知機制</li>
+  </ul>
+</div>

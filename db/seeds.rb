@@ -2,6 +2,9 @@
 
 puts "🌱 開始初始化 Redmine 敏感資料防護插件..."
 
+# 檢查是否為開發環境
+is_development = Rails.env.development? || Rails.env.test?
+
 # 檢查是否已有資料
 if DetectionRule.count == 0
   puts "📋 建立預設偵測規則..."
@@ -74,6 +77,29 @@ if DetectionRule.count == 0
     }
   ]
   
+  # 如果是開發環境，添加額外的開發用規則
+  if is_development
+    development_rules = [
+      {
+        name: '開發環境測試',
+        pattern: 'test|dev|development',
+        risk_level: 'low',
+        description: '開發環境測試用規則',
+        rule_type: 'regex',
+        priority: 10
+      },
+      {
+        name: '範例資料',
+        pattern: 'example|sample|demo',
+        risk_level: 'low',
+        description: '範例資料偵測',
+        rule_type: 'regex',
+        priority: 5
+      }
+    ]
+    rules.concat(development_rules)
+  end
+  
   rules.each do |rule_data|
     DetectionRule.create!(rule_data)
   end
@@ -120,6 +146,40 @@ if WhitelistRule.count == 0
     }
   ]
   
+  # 如果是開發環境，添加額外的開發用白名單規則
+  if is_development
+    development_whitelist_rules = [
+      {
+        name: '開發環境 IP',
+        whitelist_type: 'ip',
+        pattern: '127.0.0.1|localhost',
+        match_type: 'regex',
+        description: '本地開發環境 IP',
+        category: 'development',
+        created_by: admin_user
+      },
+      {
+        name: '開發測試資料',
+        whitelist_type: 'content',
+        pattern: 'dev|test|debug|localhost',
+        match_type: 'regex',
+        description: '開發測試資料',
+        category: 'development',
+        created_by: admin_user
+      },
+      {
+        name: '開發用戶',
+        whitelist_type: 'user',
+        pattern: 'developer|test|admin',
+        match_type: 'regex',
+        description: '開發測試用戶',
+        category: 'development',
+        created_by: admin_user
+      }
+    ]
+    whitelist_rules.concat(development_whitelist_rules)
+  end
+  
   whitelist_rules.each do |rule_data|
     WhitelistRule.create!(rule_data)
   end
@@ -133,4 +193,12 @@ puts "🎉 Redmine 敏感資料防護插件初始化完成！"
 puts "📊 統計資訊："
 puts "   - 偵測規則：#{DetectionRule.count} 個"
 puts "   - 白名單規則：#{WhitelistRule.count} 個"
-puts "   - 操作日誌：#{SensitiveOperationLog.count} 筆" 
+puts "   - 操作日誌：#{SensitiveOperationLog.count} 筆"
+
+# 如果是開發環境，顯示額外的開發資訊
+if is_development
+  puts "🔧 開發環境資訊："
+  puts "   - 環境：#{Rails.env}"
+  puts "   - 資料庫：#{ActiveRecord::Base.connection.adapter_name}"
+  puts "   - 已啟用開發模式專用規則"
+end 
