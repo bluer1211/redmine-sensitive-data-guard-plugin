@@ -14,8 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 改進錯誤處理機制
   - 開發環境專用規則和配置
   - 完整的測試覆蓋
+  - **Redmine 6.0.6 完整支援和測試驗證**
 
 ### Changed
+- **版本相容性更新**
+  - **主要支援 Redmine 6.0.6** - 完整測試和驗證
+  - 更新所有文檔以明確支援 6.0.6 版本
+  - 提升版本號至 2.0.3
+  - 統一版本支援說明
+
 - **路由配置優化**
   - 修正 `review_controller.rb` 中的路由定義與實際控制器名稱不匹配問題
   - 更新 `config/routes.rb` 中的控制器指定

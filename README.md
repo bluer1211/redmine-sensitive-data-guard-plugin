@@ -4,7 +4,7 @@
 [![Ruby Version](https://img.shields.io/badge/Ruby-3.3.9-red.svg)](https://www.ruby-lang.org/)
 [![Rails Version](https://img.shields.io/badge/Rails-7.2.2.1-blue.svg)](https://rubyonrails.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-2.0.0-orange.svg)](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/releases)
+[![Version](https://img.shields.io/badge/Version-2.0.3-orange.svg)](https://github.com/bluer1211/redmine-sensitive-data-guard-plugin/releases)
 
 > 🛡️ **強大的 Redmine 敏感資料防護工具**  
 > 自動偵測、即時阻擋、操作稽核，保護您的敏感資訊安全
@@ -35,10 +35,10 @@ Redmine 敏感資料防護插件是一個強大的資訊安全工具，用於防
 ## 🎯 系統需求
 
 ### 支援的 Redmine 版本
-- **Redmine 6.0.6** ✅ (主要支援版本)
-- **Redmine 6.0.x** ✅ (相容)
-- **Redmine 5.x** ⚠️ (部分功能可能受限)
-- **Redmine 4.x** ⚠️ (不建議使用)
+- **Redmine 6.0.6** ✅ (主要支援版本 - 完全測試和驗證)
+- **Redmine 6.0.x** ✅ (相容 - 6.0.0 及以上版本)
+- **Redmine 5.x** ⚠️ (部分功能可能受限 - 不建議使用)
+- **Redmine 4.x** ❌ (不支援 - 功能無法正常運作)
 
 ### 系統環境需求
 - **Ruby 版本**：3.0 或更高版本 (推薦 3.3.9)
